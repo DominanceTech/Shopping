@@ -977,8 +977,8 @@ namespace UploadDataToDB.Controllers
                 }
 
             }
-            return RedirectToAction("MyorderPartial");
-            //return Redirect("MyorderPartial");
+            //return RedirectToAction("MyorderPartial");
+            return Redirect("MyorderPartial");
         }
 
         [HttpGet]
