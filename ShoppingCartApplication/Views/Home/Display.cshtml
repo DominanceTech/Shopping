@@ -1,0 +1,168 @@
+﻿@model IEnumerable<UploadDataToDB.ViewModel.ContentViewModel>
+@using UploadDataToDB.ViewModel;
+@{
+    ViewBag.Title = "Display";
+}
+
+
+
+<a id="main">
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
+</a>
+<span class=" navbar-right" style="margin-top:10px;">
+    <label>Page Size: </label>
+    @Html.DropDownList("pageSize")
+
+</span>
+
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+   
+    <br />
+    <a><input type="text" class="form-control" placeholder="Product Name" id="searchingvalue" style="width:174px;margin-left:-22px;" /></a>
+    <br />
+
+    <label for="field" style="color:white; align-content:center;">Brand &nbsp;</label> &nbsp;&nbsp;<span style="color:white;">:</span>
+    @Html.DropDownList("BrandList", new SelectList((IEnumerable<BrandViewModel>)ViewBag.Brands, "BrandId", "BrandName"), new { @style = "width:115px; Height:30px; text-align:right;" })
+    <br />
+    <br />
+    <label style="color:white; text-align:right;">Category</label><span style="color:white;">:</span>
+    @Html.DropDownList("CategoryList", new SelectList((IEnumerable<CategoryViewModel>)ViewBag.Category, "CategoryId", "CategoryName"),new { @style = "width:115px; Height:30px; text-align:right;" })
+
+
+    <br />
+    <br />
+
+    <div class="col-sm-6" style="margin-left:50px;">
+        <input type="submit" class="btn btn-info" id="searchbtn" value="Search" />
+
+    </div>
+</div>
+
+<div id="contentModel1">
+
+
+
+    <div id="contentModel">
+        @Html.Partial("DisplayPartial", Model)
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>*@
+<script type="text/javascript">
+
+    function GetSearchData(pageSize, PageNumber, searchText, BrandList, CategoryList)
+    {
+
+            $.ajax({
+                url: "/Home/DisplayPartial",
+
+                datatype: "text",
+                type: "Get",
+
+                data: { Page: PageNumber, PageSize: pageSize, SearchText: searchText, BrandId: BrandList, CategoryId: CategoryList },
+                contenttype: 'application/json; charset=utf-8',
+                async: true,
+                success: function (data) {
+
+                    $("#contentModel").html(data);
+
+                },
+                error: function (xhr) {
+                    alert(xhr.message);
+                }
+            });
+    }
+
+    //$(function () {
+            $('#searchbtn').click(function () {
+
+                var pageSize = $("#pageSize").val();
+
+                var PageNumber = @ViewBag.pageNumber;
+
+                var searchText = $('#searchingvalue').val();
+                var BrandId = $('#BrandList').val();
+
+                var CategoryId = $('#CategoryList').val();
+
+                GetSearchData(pageSize, PageNumber, searchText, BrandId, CategoryId);
+
+            });
+        //});
+
+
+        //$(function () {
+            $("#BrandList").on("change", function (e) {
+                var BrandId = $('#BrandList').val();
+
+                $.ajax({
+                    url: "/Home/GetCategoriesByBrandId/" + BrandId.toString(),
+                    datatype: 'application/json',
+                    type: "Get",
+                    data: { 'BrandId': BrandId},
+
+                   success: function (data)
+                   {
+
+                       if (data.length > 0) {
+                           $('#CategoryList').html('');
+                           var options = '';
+                           //options += '<option value="Select">Select</option>';
+                           for (var i = 0; i < data.length; i++) {
+                               options += '<option value="' + data[i].CategoryId + '">' + data[i].CategoryName + '</option>';
+                              // options += '<option>' + data[i].CategoryId + '</option>';
+                           }
+                           $('#CategoryList').append(options);
+
+                       }
+                    },
+                   error: function (xhr) {
+                       alert(xhr.message +"data");
+                   }
+                });
+            });
+        //});
+
+        function GetProductData(pageSize, PageNumber) {
+
+            $.ajax({
+
+
+                url: "/Home/DisplayPartial",
+
+                datatype: "text",
+                type: "Get",
+
+                data: { 'PageNumber': PageNumber, 'PageSize': pageSize },
+                contenttype: 'application/json; charset=utf-8',
+                async: true,
+                success: function (data) {
+
+                    $("#contentModel").html(data);
+                },
+                error: function (xhr) {
+                    alert(xhr.message);
+                }
+            });
+        }
+
+        //$(function () {
+            $("#pageSize").change(function () {
+
+                var pageSize = $("#pageSize").val();
+
+                var PageNumber = @ViewBag.pageNumber;
+
+                GetProductData(pageSize, PageNumber);
+
+
+            });
+        //});
+
+</script>
+
+
+
+
+

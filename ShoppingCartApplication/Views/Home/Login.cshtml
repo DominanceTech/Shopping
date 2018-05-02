@@ -1,0 +1,98 @@
+﻿@*@model UploadDataToDB.Models.User*@
+@model UploadDataToDB.ViewModel.UserDataViewModel
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2 class="text-center">Login</h2>
+
+@*@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div style="border: solid 1px #ccc; padding: 30px 0 30px 30px; border-radius: 5px;
+                           width: 425px; margin: auto; display: table;">
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+            <div class="form-group">
+                @Html.Label("User Name", htmlAttributes: new { @class = "control-label col-md-2" })
+               &nbsp;&nbsp;
+                    @Html.TextBoxFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+              
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Login" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+}*@
+@using (Html.BeginForm())
+{ 
+<fieldset>
+    <div style="border: solid 1px #ccc; padding: 30px 0 30px 30px; border-radius: 5px; width: 325px; margin: auto; display: table;"> 
+    <table align="center"> 
+        <tr> 
+        <td>@Html.Label("User Name")</td> 
+        <td>@Html.TextBoxFor(a => a.Email)</td> <td>@Html.ValidationMessageFor(a => a.Email)</td> 
+          </tr> 
+        <tr> 
+        <td> @Html.Label("Password") </td> <td> @*@Html.TextBoxFor(a => a.Password)*@ 
+        @Html.EditorFor(a => a.Password, new { htmlAttributes = new {placeholder = "Password" } })
+</td>
+        <td> @Html.ValidationMessageFor(a => a.Password) </td> 
+            </tr>
+    
+        <tr>
+            <td>&nbsp;</td>
+            <td>@Html.CheckBoxFor(a=>a.Remember) @Html.LabelFor(a => a.Remember)
+            </td>
+         
+        </tr>
+        <tr> 
+            <td>
+        </td> 
+       
+        <td> 
+        <input type="submit" value="Login" /> 
+        </td>
+        <td>
+            </td>
+        </tr>
+                             
+        </table> 
+        </div> 
+    <br />
+    <br />
+
+    @Html.AntiForgeryToken() @Html.ValidationSummary(true) @if (@ViewBag.Message != null)
+    {
+        <div class="text-center" style="color: red">
+            @ViewBag.Message
+        </div>
+    } 
+     </fieldset> 
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,146 @@
+﻿@model IEnumerable<UploadDataToDB.ViewModel.OrderViewModel>
+
+@{
+    ViewBag.Title = "OrderClick";
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+@*<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    /* Zebra striping */
+    tr:nth-of-type(odd) {
+        background: #eee;
+    }
+
+    th {
+        background: #333;
+        color: white;
+        font-weight: bold;
+    }
+
+    td, th {
+        padding: 6px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+</style>*@
+<br />
+@foreach (var item in Model)
+{
+    <div class="text-center">
+        <b>OrderID &nbsp; : &nbsp;</b>  @Html.DisplayFor(modelItem => item.OrderId) 
+        &nbsp;&nbsp;
+        <b>Order Date &nbsp; : &nbsp;</b>  @*@Html.DisplayFor(modelItem => item.DateTime)*@   @item.DateTime.Value.ToString("dd MMM yyyy")
+        &nbsp;&nbsp;
+        <b>Order Status &nbsp; : &nbsp;</b> @Html.DisplayFor(modelItem => item.OrderStatus)
+       
+    </div>
+    break;
+}
+   
+<br />
+<table class="table container">
+  
+    <tr>
+        <th>
+            <button class="btn btn-info btn-sm">@Html.ActionLink("Back", "CheckOrders", "Home", new { style = "color:white" })</button>
+
+        </th>
+ <th>
+     Name
+ </th>
+        <th>
+            Brand Name
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+           Unit Price
+        </th>
+    <th>
+       Total Price
+    </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td> <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="150" /></td>
+     <td>
+         @Html.DisplayFor(modelItem=>item.Name)
+     </td>
+       <td>
+           @Html.DisplayFor(modelItem=>item.BrandDesc)
+       </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalPrice)
+        </td>
+        
+    </tr>
+}
+</table>
+<b class="totalPrice col-sm-4 " style="float:right;">Total Amount: @ViewBag.Total</b>
+@*@String.Format("{0:n", @ViewBag.Total)*@
+@*<hr />
+<div class="row">
+  <div class="col-md-4"><button class="btn btn-info btn-sm">@Html.ActionLink("Back", "CheckOrders", "Home")</button></div>  
+    <br />
+    <b class="col-md-4">
+        Name:
+    </b>
+    <b class="col-md-4">
+        Brand Name:
+    </b>
+    <b class="col-md-4">
+        @Html.DisplayNameFor(model => model.Quantity):
+    </b>
+    <b class="col-md-4">
+        @Html.DisplayNameFor(model => model.Price) :
+    </b>
+    <b class="col-md-4">
+        DateTime:
+    </b>
+</div>
+@foreach (var item in Model)
+{
+<div class="container">
+    <div class="panel-group row">
+        <div class="a-fixed-left-grid-col a-col-left" style="float:left;">
+            <div class="a-row">
+                <div aria-hidden="true" class="a-column a-span12 a-text-center">
+                    <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="150" />
+                </div>
+            </div>
+        </div>
+        <div class=" text-left">
+            <div class="panel-body">
+                <div class="col-md-1">
+                      @Html.DisplayFor(modelItem => item.Name)
+                </div>
+                <div class="col-md-1">
+                    @Html.DisplayFor(modelItem => item.BrandDesc)
+                </div>
+                <div class="col-md-1">
+                  
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </div>
+                <div class="col-md-1">
+                      @Html.DisplayFor(modelItem => item.Price)
+                </div>
+                <div class="col-md-1">
+                     @Html.DisplayFor(modelItem => item.DateTime)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}*@

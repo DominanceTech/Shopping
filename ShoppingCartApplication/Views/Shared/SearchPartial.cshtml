@@ -1,0 +1,76 @@
+﻿@model IEnumerable<SelectListItem>
+@using UploadDataToDB.ViewModel;
+
+<a><input type="text" class="form-control" placeholder="Product Name" id="searchingvalue" style="width:174px;margin-left:-22px;" /></a>
+<br />
+@*<a href="#">
+
+        <label for="field" style="align-content:center;">Brand</label>
+        @Html.DropDownList("BrandList", new SelectList((IEnumerable<BrandViewModel>)ViewBag.Brands, "BrandId", "BrandName"))
+
+    </a>
+
+    <a href="#">
+
+        <label style="text-align:right; margin-left:-20px;">Category:</label>
+
+    </a>*@
+
+<br />
+
+<div class="col-sm-6" style="margin-left:50px;">
+    <input type="submit" class="btn btn-info" id="searchbtn" value="Search" />
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.0.5/what-input.js"></script>
+    <script src="~/Scripts/foundation.js"></script>
+    <script src="~/Scripts/App.js"></script>*@
+<script>
+
+    function GetSearchData(pageSize, PageNumber, searchText, BrandLayout, CategoryLayout) {
+
+        $.ajax({
+            url: "/Home/DisplayPartial",
+
+            datatype: "text",
+            type: "Get",
+
+            data: { Page: PageNumber, PageSize: pageSize, SearchText: searchText, BrandLayout: BrandLayout, CategoryLayout: CategoryLayout },
+            contenttype: 'application/json; charset=utf-8',
+            async: true,
+            success: function (data) {
+
+                $("#contentModel").html(data);
+
+            },
+            error: function (xhr) {
+                alert(xhr.message);
+            }
+        });
+    }
+
+
+
+    $(function () {
+        @*$('#searchbtn').click(function () {
+
+            var pageSize = $("#pageSize").val();
+            //var PageNumber = '1';
+            var PageNumber = @Model.PageNumber;
+
+            var searchText = $('#searchingvalue').val();
+            var BrandLayout = $('#BrandLayout').val();
+            alert(BrandLayout);
+            var CategoryLayout = $('#CategoryLayout').val();
+            GetSearchData(pageSize, PageNumber, searchText, BrandLayout, CategoryLayout);
+
+        });*@
+     //   jQuery(document).foundation();
+    });
+
+
+
+</script>

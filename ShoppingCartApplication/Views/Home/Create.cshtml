@@ -1,0 +1,116 @@
+﻿@model UploadDataToDB.ViewModel.ContentViewModel
+@{
+    ViewBag.Title = "Create";
+}
+<div id="main">
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
+</div>
+
+<script src="~/ckeditor/ckeditor.js"></script>
+<script src="~/ckeditor/adapters/jquery.js"></script>
+
+<h2><center>ADD PRODUCT</center></h2>
+ 
+<script type="text/javascript">
+    function fileCheck(obj) {
+        var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+        if ($.inArray($(obj).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+            alert("Only '.jpeg','.jpg', '.png', '.gif', '.bmp' formats are allowed.");
+        }
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $("button").click(function () {
+            $("BrandId").hide();
+        });
+    });
+
+</script>
+
+@using (Html.BeginForm("Create", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", placeholder = "Content Title" })
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <p class="test">
+                @Html.Label("Brand Name ", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("BrandId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.TextBoxFor(Model => Model.BrandId, new { @class = "form-control", placeholder = "Add New Brand" })               
+                    <input type="submit" value="Add new Brand" class="btn btn-default" />
+                </div>
+            </p>
+            </div>
+ 
+
+        <div class="form-group">
+                @Html.Label("Category Name ", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.TextBoxFor(Model => Model.BrandId, new { @class = "form-control", placeholder = "Add New Category" }) 
+                <input type="submit" value="Add New Category" class="btn btn-default" />
+ 
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", placeholder = "Description" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.price, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.price, new { @class = "form control", placeholder = "price" })
+                @Html.ValidationMessageFor(model => model.price)
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Image, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" name="ImageData" id="ImageData" onchange="fileCheck(this);" />
+                @Html.ValidationMessageFor(model => model.Image)
+            </div>
+        </div>
+
+     
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.Review, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Review, new { @class = "form-control", placeholder = "Review" })
+                @Html.ValidationMessageFor(model => model.Review)
+            </div>
+        </div>*@
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+}

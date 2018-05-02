@@ -1,0 +1,112 @@
+﻿@*@model IEnumerable<UploadDataToDB.Models.Content>*@ 
+@*@model IEnumerable<UploadDataToDB.Models.UserCart>*@
+
+
+<div id="MyorderPartial">
+    @Html.Partial("MyorderPartial");
+</div>
+
+
+<script>
+    $('.dropdown-toggle').click(function (e) {
+        $('.dropdown-toggle').dropdown();
+    });
+
+    $('.btn_Confirmation').on('click', function () {
+         var UserId = @Session["UserId"].ToString();
+       //  var ProductId = $(this).attr("id");
+         $.ajax({
+             url: "/Home/OrderConfirmation",
+
+             datatype: "text",
+             type: "Get",
+             data: { UserId: UserId },
+
+             success: function (data) {
+                $('#MyorderPartial').html(data)
+               
+
+             },
+             error: function (xhr) {
+                 alert(xhr.statusText);
+             }
+
+         });
+
+    });
+
+
+
+ $('.btn_RemoveALL').on('click', function () {
+        var UserId = @Session["UserId"].ToString();
+        var ProductId = $(this).attr("id");
+        $.ajax({
+            url: "/Home/RemoveALL",
+
+            datatype: "text",
+            type: "Get",
+            data: { ProductId: ProductId, UserId: UserId },
+
+            success: function (data) {
+                $('#MyorderPartial').html(data)
+                //$('#spnCart').html(data)
+
+            },
+            error: function (xhr) {
+                alert(xhr.statusText);
+            }
+
+        });
+
+    });
+
+
+    $('.btn_Remove').on('click', function () {
+        var UserId = @Session["UserId"].ToString();
+        var ProductId = $(this).attr("id");
+        $.ajax({
+            url: "/Home/Remove",
+
+            datatype: "text",
+            type: "Get",
+            data: { ProductId: ProductId, UserId: UserId },
+
+            success: function (data) {
+                $('#MyorderPartial').html(data)
+                //$('#spnCart').html(data)
+
+            },
+            error: function (xhr) {
+                alert(xhr.statusText);
+            }
+
+        });
+
+    });
+
+       $('.AddTo').click(function () {
+
+            var productid = $(this).attr("id");
+            //  var productid = $('#ID').html();
+            var UserId = '@Session["UserId"].ToString()';
+
+            $.ajax({
+                url: "/Home/AddQuantity",
+
+                datatype: "text",
+                type: "Get",
+                data: { ProductId: productid, UserId: UserId },
+
+                success: function (data) {
+                    $('#MyorderPartial').html(data)
+                    //$('#spnCart').html(data)
+
+                },
+                error: function (xhr) {
+                    alert(xhr.statusText);
+                }
+            });
+
+        });
+
+</script>
