@@ -1013,7 +1013,7 @@ namespace UploadDataToDB.Controllers
                                      ProductId = a.ProductId == null ? 0 : a.ProductId.Value,
                                      Quantity = a.Quantity == null ? 0 : a.Quantity.Value,
                                      Price = b.price,
-                                     // Quantity = Convert.ToInt32(a.Quantity),
+                                    // // Quantity = Convert.ToInt32(a.Quantity),
                                      //Price = Int32.Parse(b.price.ToString()),
 
                                      // DateTime = a.DateTime
