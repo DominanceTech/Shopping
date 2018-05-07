@@ -1,6 +1,7 @@
 ﻿@*@model IEnumerable<UploadDataToDB.Models.Content>*@ 
 @*@model IEnumerable<UploadDataToDB.Models.UserCart>*@
 
+<div id="wait" style="display:none;width:69px;height:69px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><b class="loader" width="64" height="64"><br>Loading..</b></div>
 
 <div id="MyorderPartial">
     @Html.Partial("MyorderPartial");
@@ -107,6 +108,18 @@
                 }
             });
 
-        });
+    });
+
+
+
+       $(document).ready(function () {
+           $(document).ajaxStart(function () {
+               $('#wait').css("display", "block")
+           });
+           $(document).ajaxComplete(function () {
+               $("#wait").css("display", "none");
+           });
+
+       });
 
 </script>

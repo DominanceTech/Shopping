@@ -27,6 +27,11 @@ namespace UploadDataToDB.ViewModel
         [Required]
         [DisplayFormat(DataFormatString ="{0:N2}")]
         public decimal price { get; set; }
+
+        [Required]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public decimal Totalprice { get; set; }
+
         [Required]
         public byte[] Image { get; set; }
         [Required]

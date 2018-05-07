@@ -811,6 +811,7 @@ namespace UploadDataToDB.Controllers
                                 Image = b.Image,  
                                 Quantity = a.Quantity == null ? 0 : a.Quantity.Value,
                                 price = b.price,
+                                Totalprice=(b.price * (a.Quantity == null ? 0 : a.Quantity.Value)),
                             }).ToList();
 
                 foreach (var totalsum in item)
@@ -821,8 +822,10 @@ namespace UploadDataToDB.Controllers
                     sum = sum + /*System.Convert.ToInt32(totalsum.price)*/ Price;
                     
                 }
+               
+             //   Convert.ToDecimal(sum).ToString("#,##0.00");
                 ViewBag.Total = sum;
-                //String.Format("{0:n}", ViewBag.Total);
+              //  String.Format("{0:n}", ViewBag.Total);
                 ViewBag.Price = Price;
                 var count = (from a in db.UserCarts
                              where a.UserId == (UserId)
@@ -835,7 +838,8 @@ namespace UploadDataToDB.Controllers
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Login");
+                throw;
+               // return RedirectToAction("Login");
             }
         }
 
@@ -997,7 +1001,7 @@ namespace UploadDataToDB.Controllers
                                      Price = b.price,
                                     // // Quantity = Convert.ToInt32(a.Quantity),
                                      //Price = Int32.Parse(b.price.ToString()),
-
+                                     OrderStatus="In Progress",
                                      // DateTime = a.DateTime
                                      DateTime = billgeneratedate
                                  }).ToList();
@@ -1007,7 +1011,7 @@ namespace UploadDataToDB.Controllers
           
                 if (orderRec == null)
                 {
-                    orderNumber = "SC-BL-01";
+                    orderNumber = "SC-BL-000001";
                     //orderNumber = (orderNumber).Substring(6, 2);
 
                 }
@@ -1019,18 +1023,20 @@ namespace UploadDataToDB.Controllers
                     // orderNumber = (orderNumber).Substring(6, 2);
                     string oldOrderNo = orderRec.OrderId;
 
-                    orderNumber = (oldOrderNo).Substring(6, 2);
+                    orderNumber = (oldOrderNo).Substring(6, 6);
                     int newOrdernumber = Convert.ToInt32(orderNumber);
                     newOrdernumber= ++(newOrdernumber);
-                    // orderNumber = "SC-BL-02";
+                    int length = 6;
          
                     orderNumber = (newOrdernumber).ToString();
-                    orderNumber = "SC-BL-0"+ orderNumber;
-                  // orderNumber = "SC-BL- "'+orderNumber+'" ";
+                    //      orderNumber= String.Format("{0:D5}", orderNumber);
+                    var result = orderNumber.ToString().PadLeft(length, '0');
+                    orderNumber = "SC-BL-"+ result;
+                 
 
                 }
             
-              //   SerialNo = orderRec.SerialNo;
+        
                 List < UserOrder > orderList = new List<UserOrder>();
                 foreach (var item in OrderData)
                 {
@@ -1043,6 +1049,7 @@ namespace UploadDataToDB.Controllers
                         Price = (item.Price)* (item.Quantity),
                         Date = item.DateTime,
                        OrderId = orderNumber,
+                       OrderStatus="In Progress",
                        
                     });
                 }

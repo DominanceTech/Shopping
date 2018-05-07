@@ -63,9 +63,9 @@
                     <th>       </th>
                     <th>Product Name</th>
                     <th>Quantity</th>
-                    <th>Price</th>
-
-                    <th>Remove</th>
+                    <th>Unit Price</th>
+                    <th>Total Price</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,7 +80,10 @@
 
 
                         <td>   <button id="@item.ID" class="btn_Remove"> – </button> &nbsp; <b id="Quantity">@Html.DisplayFor(modelitem => item.Quantity)</b> &nbsp; <button id="@item.ID" class="AddTo"> + </button></td>
-                        <td>(@Html.DisplayFor(modelitem => item.price))*(@Html.DisplayFor(modelitem => item.Quantity)) </td>
+                        <td>@Html.DisplayFor(modelitem => item.price) </td>
+                        <td>
+                            @string.Format("{0:#,0.00}", item.Totalprice)
+                        </td>
 
                         <td><a id="@item.ID" class="btn_RemoveALL btn btn-info">Delete</a></td>
                     </tr>
@@ -92,7 +95,10 @@
         </table>
         <div class="col-sm-4"><button class="btn btn-info btn-md">@Html.ActionLink("Back", "DisplayPartial", "Home", new { style = "color:white" })</button>
 </div><div class="col-sm-4"><button class="btn_Confirmation btn btn-info btn-md">Confirm Order</button></div>
-        <b class="totalPrice col-sm-4 ">Total Amount: @ViewBag.Total</b>
+        <b class="totalPrice col-sm-4 ">Total Amount:
+        @string.Format("{0:#,0.00}", @ViewBag.Total)
+        </b>
+     
     </div>
 
 }

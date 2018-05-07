@@ -95,7 +95,7 @@
                 <br />
 
                 @if (Session["Role"] != null)
-                {             <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" style="margin-right:30px;" id="Action" role="button" aria-expanded="false">Action:</a>
+                {             <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" style="margin-right:30px;" id="Action" role="button" aria-expanded="false">Action</a>
                 <ul class="dropdown-menu text-center" style="position:relative!important; margin-right:-100px;top:30px;" role="menu">
                     <li class="btn btn-info btn-sm" style="width:115px; height:30px;">  @Html.ActionLink("Edit", "Edit", new { id = item.ID })</li>
                     <br />
@@ -133,7 +133,7 @@
     
     
 }
-
+<div id="wait" style="display:none;width:69px;height:69px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><b class="loader" width="64" height="64"><br>Loading..</b></div>
 
 
 <div colspan="3" class="pager">
@@ -203,7 +203,17 @@
                     $('#previous').prop("disabled", false);
                 }
             }
-  
+
+
+            $(document).ready(function () {
+                $(document).ajaxStart(function () {
+                    $('#wait').css("display", "block")
+                });
+                $(document).ajaxComplete(function () {
+                    $("#wait").css("display", "none");
+                });
+
+            });
 
 </script>
 

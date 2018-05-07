@@ -88,7 +88,9 @@
     </tr>
 }
 </table>
-<b class="totalPrice col-sm-4 " style="float:right;">Total Amount: @ViewBag.Total</b>
+<b class="totalPrice col-sm-4 " style="float:right;">Total Amount:
+    @string.Format("{0:#,0.00}", @ViewBag.Total)
+   </b>
 @*@String.Format("{0:n", @ViewBag.Total)*@
 @*<hr />
 <div class="row">
