@@ -140,14 +140,21 @@
                             <li style="margin-top:10px; margin-right:15px;">
 
                                 @using (Html.BeginForm("Display", "Home", FormMethod.Get))
-                                {
-                                    @Html.TextBox("searching", null, new { @style = "height:34px;", @placeholder = "Product Name" })
+                                    {
+                                        @Html.TextBox("searching", null, new { @style = "height:34px;", @placeholder = "Product Name" })
 
-                                    <button class="btn btn-info" value="Search" type="submit">
-                                        <span class="glyphicon glyphicon-search"></span>
-                                    </button>
-                                }
+                                        <button class="btn btn-info" value="Search" type="submit">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                    }
+                             
+                               
+                                            @*@Html.TextBox("searching", null, new { @style = "height:34px;", @placeholder = "Product Name" })
 
+                                            <button class="btn btn-info" id="submitMethodBtn" value="Search" type="submit">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                            </button>*@
+                                 
                             </li>
 
                             <li  class="dropdown">
@@ -212,11 +219,14 @@
             document.getElementById("main").style.marginLeft = "175px";
             //document.getElementById("main").style.marginRight = "-67px";
             document.getElementById("main").style.marginRight = "-30px";
+            document.getElementById("pageSize").style.marginRight = "30px";
+           
         }
         function closeNav() {
             document.getElementById("mySidenav").style.width = "0";
             document.getElementById("main").style.marginLeft = "0";
             document.getElementById("main").style.marginRight = "0";
+            document.getElementById("pageSize").style.marginRight = "0"
         }
     </script>
   

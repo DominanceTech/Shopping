@@ -1,11 +1,9 @@
-﻿
-@*@model IEnumerable<UploadDataToDB.ViewModel.ContentViewModel>*@
+﻿@*@model IEnumerable<UploadDataToDB.ViewModel.ContentViewModel>*@
 
 @model PagedList.IPagedList<UploadDataToDB.ViewModel.ContentViewModel>
 @using PagedList.Mvc;
 <style>
     .adress {
-
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -18,8 +16,9 @@
         border: 1px solid Black;
         box-sizing: border-box;
     }
-    .dropdown-menu{
-        min-width:130px!important;
+
+    .dropdown-menu {
+        min-width: 130px !important;
     }
     /*.body-content {
         margin-right: -15px !important;
@@ -34,55 +33,57 @@
         position: relative;
         background-color: #FFF;
     }
+
     .col-md-8 {
-        /*width:73%!important;*/
-        width: 70% !important;
+        width: 73% !important;
     }
-
-
 </style>
 
 
 
 @foreach (var item in Model)
 {
+
     <div class=" body-content box content">
         <div class="panel-group row">
             @*col-sm-3 col-md-6*@@*width="250" height="250"*@
             @*<div class="panel-body dl-horizontal col-sm-6 col-md-4">*@
 
             <div class="a-fixed-left-grid-col a-col-left" style="float:left;">
-            <div class="a-row"> 
-             <div aria-hidden="true" class="a-column a-span12 a-text-center">
-                 <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="200" />            
-                 <div class="a-section a-spacing-none a-text-center">
+                <div class="a-row">
+                    <div aria-hidden="true" class="a-column a-span12 a-text-center">
+                        <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="200" />
+                        <div class="a-section a-spacing-none a-text-center">
+                        </div>
                     </div>
-                 </div>
                 </div>
             </div>
 
-
           
+            @*<img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="170" height="170" />
+
+                </div>*@
+            @*col-sm-9 col-md-6*@
 
             <div class="col-sm-9 col-md-8  decription text-left">
                 <b id="ID" class="hidden">@Html.DisplayFor(modelitem=>item.ID)</b>
                 <div class="panel-body ">
-                   
-                    <b>Name: </b> 
-                        @Html.ActionLink(item.Name, "ProductDetails", "Home", new { id = item.ID }, null /* html attributes */)
+
+                    <b>Name: </b>
+                    @Html.ActionLink(item.Name, "ProductDetails", "Home", new { id = item.ID }, null /* html attributes */)
 
 
 
-                    <div >
+                    <div>
                         <b>Brand:</b>  @Html.DisplayFor(modelitem => item.BrandDesc)
                     </div>
                     <div>
                         <b>Category:</b>   @Html.DisplayFor(modelitem => item.CategoryDesc)
                     </div>
                     <div class="adress">
-                     <b>  Description:</b>
-                     @Html.DisplayFor(model => item.Description)
-                   </div>
+                        <b>  Description:</b>
+                        @Html.DisplayFor(model => item.Description)
+                    </div>
                     <br />
                     <div>
                         <b>Price : </b> @Html.DisplayFor(modelitem => item.price)
@@ -93,19 +94,19 @@
 
                 <br />
 
-@if (Session["Role"] != null)
-{             <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" style="margin-right:30px;" id="Action" role="button" aria-expanded="false">Action:</a>
+                @if (Session["Role"] != null)
+                {             <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" style="margin-right:30px;" id="Action" role="button" aria-expanded="false">Action:</a>
                 <ul class="dropdown-menu text-center" style="position:relative!important; margin-right:-100px;top:30px;" role="menu">
                     <li class="btn btn-info btn-sm" style="width:115px; height:30px;">  @Html.ActionLink("Edit", "Edit", new { id = item.ID })</li>
                     <br />
-                    
+
                     <li class="btn navbar-btn btn-info btn-sm" style="width:117px; height:30px;">
                         @Html.ActionLink("Delete", "Delete", "Home", new { id = item.ID },
                    new { onclick = "return confirm('Are you sure you wants to delete this record?');" })
                     </li>
                     <li>
                         <div>
-                            <a id="@item.ID"  class="btn_AddToCart btn btn-info" style="height:30px;">
+                            <a id="@item.ID" class="btn_AddToCart btn btn-info" style="height:30px;">
                                 <span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart
                             </a>
                         </div>
@@ -113,49 +114,42 @@
                     </li>
 
                 </ul>
-}
-else
-{
-    <div>
-        <a id="@item.ID" class="btn_AddToCart btn btn-info" style="height:30px; width:112px; margin-right:15px" onclick="AddtoCart()">
-            <span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart
-        </a>
-    </div>
-}
+                }
+                else
+                {
+                    <div>
+                        <a id="@item.ID" class="btn_AddToCart btn btn-info" style="height:30px; width:112px; margin-right:15px" onclick="AddtoCart()">
+                            <span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart
+                        </a>
+                    </div>
+                }
 
             </div>
+            <input type="hidden" id="pageNumberValue" value="@ViewBag.pageNumber" />
+            <input type="hidden" id="PageCount" value="@Model.PageCount" />
         </div>
     </div>
     <br />
-   
+    
+    
 }
 
 
+
+<div colspan="3" class="pager">
+    @*<input type="button" class="btn " id="btnFirst" value="First" />
+    <input type="button" class="btn " id="previous" value="Previous" />*@
+
+    <a><label>Page @Model.PageNumber of @Model.PageCount </label></a>
+
+    @*<input type="button" class="btn" id="next" value="Next" />
+    <input type="button" class="btn" id="btnLast" value="Last" />*@
+</div>
+
+
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>*@
 <script type="text/javascript">
-
-    function GetData(pageSize, page)
-    {
-
-        $.ajax({
-            url: "/Home/DisplayPartial",
-            data: { 'page': page, 'PageSize': pageSize },
-            success: function (data) {
-
-                $("#contentModel").html(data);
-               // $(window).scrollTop(0);
-
-            }
-        });
-    }
-
-    $('.dropdown-toggle').click(function (e) {
-       $('.dropdown-toggle').dropdown();
-
-    });
-
-    $('.btn_AddToCart').click(function (e) {
+      $('.btn_AddToCart').click(function (e) {
        var productid = $(this).attr("id");
             //  var productid = $('#ID').html();
             var UserId = '@Session["UserId"].ToString()';
@@ -178,79 +172,38 @@ else
                 }
             });
     });
-    $(function () {
 
 
-        $('#btnFirst').click(function () {
-
-            var pageSize = $("#pageSize").val();
-            var page = 1;
-            GetData(pageSize, page);
+        $('.dropdown-toggle').click(function (e) {
+        $('.dropdown-toggle').dropdown();
         });
 
-        $('#btnLast').click(function () {
-            var pageSize = $("#pageSize").val();
-            var page = @Model.PageCount;
-                GetData(pageSize, page);
-        });
-
-
-        $("#previous").click(function () {
-            var pageSize = $("#pageSize").val();
-             if (@ViewBag.pageNumber>1)
-             {
-                 var page = @ViewBag.pageNumber-1;
-
-                 GetData(pageSize, page);
-
+    
+            var PageNumber = $("#pageNumberValue").val();
+            var PageCount = $("#PageCount").val();
+            if (PageNumber == 1 && PageCount == 1) {
+                $('#btnFirst').prop("disabled", true);
+                $('#next').prop("disabled", true);
+                $('#btnLast').prop("disabled", true);
+                $('#previous').prop("disabled", true);
             }
-               if (@ViewBag.pageNumber==@Model.PageCount)
-            {
-                $('#next').prop('disabled', true);
-           }
+            else {
+              
 
-        });
+                if (PageNumber == 1) {
+                    $('#previous').prop("disabled", true);
+                    $('#btnFirst').prop("disabled", true);
+                    $('#next').prop("disabled", false);
+                    $('#btnLast').prop("disabled", false);
+                }
+                if (PageNumber == PageCount) {
+                    $('#next').prop("disabled", true);
+                    $('#btnLast').prop("disabled", true);
+                    $('#btnFirst').prop("disabled", false);
+                    $('#previous').prop("disabled", false);
+                }
+            }
+  
 
-        $(document).on("click", "#next", function (e) {
-        //$('#next').click(function () {
-            var PageNumber =@ViewBag.pageNumber;
-            alert(PageNumber);
-             var pageSize = $("#pageSize").val();
-             if (PageNumber< @Model.PageCount)
-             {
-                 var page = @ViewBag.pageNumber+1;
-
-                 GetData(pageSize, page);
-
-             }
-            if (@ViewBag.pageNumber==@Model.PageCount)
-            {
-                $('#next').prop('disabled', true);
-           }
-
-        });
-     //  jQuery(document).foundation();
-
-    });
-
-
-
-
-//    $(document).ready(function() {
-//    $(".dropdown-toggle").dropdown();
-//});
 </script>
 
-@*@using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, UpdateTargetId = "form1" }))
-    {*@
-    <div colspan="3" class="pager">
-        <input type="button" class="btn " id="btnFirst" value="First" /> 
-        <input type="button" class="btn " id="previous" value="Previous" /> 
- 
-            <a><label>Page @Model.PageNumber of @Model.PageCount </label></a>
-    
-       <input type="button"  class="btn" id="next" value="Next"/>
-       <input type="button" class="btn" id="btnLast" value="Last" />
-    </div>
-    
-@*}*@

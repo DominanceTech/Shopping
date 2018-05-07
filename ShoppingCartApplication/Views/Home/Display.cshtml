@@ -1,23 +1,27 @@
 ﻿@model IEnumerable<UploadDataToDB.ViewModel.ContentViewModel>
+
+@*@model PagedList.IPagedList<UploadDataToDB.ViewModel.ContentViewModel>*@
 @using UploadDataToDB.ViewModel;
 @{
     ViewBag.Title = "Display";
 }
 
 
+<div style="position:fixed;">
+    <a id="main">
+        <span style="font-size:30px;cursor:pointer; position:fixed;" onclick="openNav()">&#9776; </span>
+    </a><span style="padding-left:1160px;"></span>&nbsp;&nbsp;
+    <b class=" navbar-right" style="margin-top:10px; float:left;">
+        <label>Page Size: </label>
+        @Html.DropDownList("pageSize")
 
-<a id="main">
-    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
-</a>
-<span class=" navbar-right" style="margin-top:10px;">
-    <label>Page Size: </label>
-    @Html.DropDownList("pageSize")
-
-</span>
-
+    </b>
+</div>
+<br />
+<br />
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-   
+
     <br />
     <a><input type="text" class="form-control" placeholder="Product Name" id="searchingvalue" style="width:174px;margin-left:-22px;" /></a>
     <br />
@@ -27,7 +31,7 @@
     <br />
     <br />
     <label style="color:white; text-align:right;">Category</label><span style="color:white;">:</span>
-    @Html.DropDownList("CategoryList", new SelectList((IEnumerable<CategoryViewModel>)ViewBag.Category, "CategoryId", "CategoryName"),new { @style = "width:115px; Height:30px; text-align:right;" })
+    @Html.DropDownList("CategoryList", new SelectList((IEnumerable<CategoryViewModel>)ViewBag.Category, "CategoryId", "CategoryName"), new { @style = "width:115px; Height:30px; text-align:right;" })
 
 
     <br />
@@ -41,18 +45,26 @@
 
 <div id="contentModel1">
 
-
-
     <div id="contentModel">
         @Html.Partial("DisplayPartial", Model)
     </div>
+
 </div>
+<div colspan="3" class="pager">
+    <input type="button" class="btn " id="btnFirst" value="First" />
+    <input type="button" class="btn " id="previous" value="Previous" />
+ 
+
+    <input type="button" class="btn" id="next" value="Next" />
+    <input type="button" class="btn" id="btnLast" value="Last" />
+</div>
+
+
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>*@
 <script type="text/javascript">
 
-    function GetSearchData(pageSize, PageNumber, searchText, BrandList, CategoryList)
-    {
+    function GetSearchData(pageSize, PageNumber, searchText, BrandList, CategoryList) {
 
             $.ajax({
                 url: "/Home/DisplayPartial",
@@ -66,7 +78,7 @@
                 success: function (data) {
 
                     $("#contentModel").html(data);
-
+                    $(window).scrollTop(0);
                 },
                 error: function (xhr) {
                     alert(xhr.message);
@@ -77,20 +89,36 @@
     //$(function () {
             $('#searchbtn').click(function () {
 
-                var pageSize = $("#pageSize").val();
 
+                var pageSize = $("#pageSize").val();
+               
                 var PageNumber = @ViewBag.pageNumber;
 
                 var searchText = $('#searchingvalue').val();
                 var BrandId = $('#BrandList').val();
 
                 var CategoryId = $('#CategoryList').val();
+              
+                var searching = 0;
 
                 GetSearchData(pageSize, PageNumber, searchText, BrandId, CategoryId);
 
             });
-        //});
 
+            //});
+            @*$('#submitMethodBtn').click(function () {
+             var pageSize = $("#pageSize").val();
+
+                var PageNumber = @ViewBag.pageNumber;
+                var searchText = $('#searchingvalue').val();
+                var searching = $('#searching').val();
+                var BrandId = $('#BrandList').val();
+
+                var CategoryId = $('#CategoryList').val();
+                searchText = 0;
+
+                GetSearchData(pageSize, PageNumber, searching, BrandId, CategoryId);
+            });*@
 
         //$(function () {
             $("#BrandList").on("change", function (e) {
@@ -124,43 +152,256 @@
             });
         //});
 
-        function GetProductData(pageSize, PageNumber) {
-
-            $.ajax({
-
-
-                url: "/Home/DisplayPartial",
-
-                datatype: "text",
-                type: "Get",
-
-                data: { 'PageNumber': PageNumber, 'PageSize': pageSize },
-                contenttype: 'application/json; charset=utf-8',
-                async: true,
-                success: function (data) {
-
-                    $("#contentModel").html(data);
-                },
-                error: function (xhr) {
-                    alert(xhr.message);
-                }
-            });
-        }
-
+     
         //$(function () {
             $("#pageSize").change(function () {
-
+                var searching = $('#searching').val();
+                var searchText = $('#searchingvalue').val();
+                var BrandId = $('#BrandList').val();
+                var CategoryId = $('#CategoryList').val();
                 var pageSize = $("#pageSize").val();
 
                 var PageNumber = @ViewBag.pageNumber;
+                //var PageNumber = $("#pageNumberValue").val();
+                //GetProductData(pageSize, PageNumber);
 
-                GetProductData(pageSize, PageNumber);
-
+                if (searching=="")
+                {
+                    GetSearchData(pageSize, PageNumber, searchText, BrandId, CategoryId);
+                }
+                else {
+                    if (searchText=="")
+                    {
+                        GetSearchData(pageSize, PageNumber, searching, BrandId, CategoryId);
+                    }
+                    else {
+                        GetSearchData(pageSize, PageNumber, searchText, BrandId, CategoryId);
+                    }
+                }
 
             });
         //});
 
+
+
+
+    $('.dropdown-toggle').click(function (e) {
+       $('.dropdown-toggle').dropdown();
+
+    });
+
+
+
+    $(function () {
+
+
+        $('#btnFirst').click(function () {
+            var searching = $('#searching').val();
+            var searchText = $('#searchingvalue').val();
+            var BrandId = $('#BrandList').val();
+            var CategoryId = $('#CategoryList').val();
+
+            var pageSize = $("#pageSize").val();
+            var page = 1;
+            //GetData(pageSize, page);
+            $(this).prop("disabled", true);
+            $('#previous').prop("disabled", true);
+
+            $('#next').prop("disabled", false);
+            $('#btnLast').prop("disabled", false);
+
+
+            if (searching == "")
+            {
+                GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+            }
+            else {
+                if (searchText == "") {
+                    GetSearchData(pageSize, page, searching, BrandId, CategoryId);
+                }
+                else {
+                    GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+                }
+            }
+        });
+
+        $('#btnLast').click(function () {
+            var searching = $('#searching').val();
+            var searchText = $('#searchingvalue').val();
+            var BrandId = $('#BrandList').val();
+            var CategoryId = $('#CategoryList').val();
+            var PageNumber = $("#pageNumberValue").val();
+
+            var PageCount = $("#PageCount").val();
+            var pageSize = $("#pageSize").val();
+            var page = PageCount;
+            @*var page = @Model.PageCount;*@
+                //GetData(pageSize, page);
+            //GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+            $(this).prop('disabled', true);
+            $('#next').prop('disabled', true)
+
+            $('#btnFirst').prop("disabled", false);
+            $('#previous').prop("disabled", false);
+         
+                if (searching == "") {
+                    GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+                }
+                else {
+                    if (searchText == "") {
+                        GetSearchData(pageSize, page, searching, BrandId, CategoryId);
+                    }
+                    else {
+                        GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+                    }
+                }
+           
+        });
+       
+            
+           
+    
+
+        $("#previous").click(function () {
+            var searching = $('#searching').val();
+            var searchText = $('#searchingvalue').val();
+            var BrandId = $('#BrandList').val();
+            var CategoryId = $('#CategoryList').val();
+
+            var pageSize = $("#pageSize").val();
+            var PageNumber = $("#pageNumberValue").val();
+             //if (PageNumber>1)
+             //{
+
+             //    if (searching == "")
+             //    {
+
+             //    var page =--PageNumber;
+             //    GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+
+             //    }
+             //    else {
+             //        var page = --PageNumber;
+             //        GetSearchData(pageSize, page, searching, BrandId, CategoryId);
+             //    }
+
+             //}
+            $('#next').prop("disabled", false);
+            $('#btnLast').prop("disabled", false);
+
+            if (PageNumber == 1)
+            {
+                $(this).prop("disabled", true);
+                $('#btnFirst').prop("disabled", true);
+            }
+            else {
+
+        
+                if (PageNumber > 1)
+                {
+                    if (searching == "")
+                    {
+                    var page = --PageNumber;
+
+                    GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+                    }
+                    else
+                    {
+                        if (searchText == "")
+                        {
+                        var page = --PageNumber;
+
+                        GetSearchData(pageSize, page, searching, BrandId, CategoryId);
+                        }
+                        else
+                        {
+                        var page = --PageNumber;
+
+                        GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+                        }
+
+                    }
+
+
+                }
+
+            }  
+
+        });
+
+        $(document).on("click", "#next", function (e) {
+
+          // var searchText = $('#searchingvalue').val();
+          //var pageSize = $("#pageSize").val();
+          //var PageNumber = $("#pageNumberValue").val();
+          //var PageCount = $("#PageCount").val();
+
+          //if (PageNumber < PageCount)
+          //  {
+          //      var page = ++PageNumber;
+
+          //      GetData(pageSize, page, searchText);
+
+          //   }
+
+  //     // });
+
+            $('#btnFirst').prop("disabled", false);
+            $('#previous').prop("disabled", false);
+         
+                var pageSize = $("#pageSize").val();
+
+                var PageNumber = $("#pageNumberValue").val();
+
+                var searchText = $('#searchingvalue').val();
+                var searching = $('#searching').val();
+
+                var BrandId = $('#BrandList').val();
+                var PageCount = $("#PageCount").val();
+                var CategoryId = $('#CategoryList').val();
+
+                if (PageNumber == PageCount)
+                {
+                    $(this).prop("disabled", true);
+                    $('#btnLast').prop("disabled", true);
+                   
+                }
+                else
+                {
+                    if (PageNumber < PageCount)
+                    {
+                        if (searching == "") {
+                            var page = ++PageNumber;
+
+                            GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+                        }
+                        else {
+                            if (searchText == "") {
+                                var page = ++PageNumber;
+
+                                GetSearchData(pageSize, page, searching, BrandId, CategoryId);
+                            }
+                            else {
+                                var page = ++PageNumber;
+
+                                GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
+                            }
+
+                        }
+
+
+                    }
+                }
+
+               
+               
+
+        });
+
+    });
+
 </script>
+
 
 
 

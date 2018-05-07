@@ -70,6 +70,8 @@ namespace UploadDataToDB.Controllers
                                 Session["UserId"] = obj.UserId.ToString();
                                 Session["Email"] = obj.Email.ToString();
                                 Session["Role"] = obj.Role.ToString();
+                                Session["FirstName"] = obj.FirstName.ToString();
+                                Session["LastName"] = obj.LastName.ToString();
                                if(objUser.Remember)
                                 {
                                     HttpCookie cookie = new HttpCookie("Login");
@@ -244,23 +246,6 @@ namespace UploadDataToDB.Controllers
         {
             ShoppingCartAppEntities db = new ShoppingCartAppEntities();
 
-            //if (option == "BrandId")
-            //{
-
-            //    return PartialView("SearchPartial",db.Contents.Where(x => x.BrandId.ToString() == search || search == null).ToList());
-            //}
-            //else if (option == "CategoryId")
-            //{
-            //    return PartialView("SearchPartial",db.Contents.Where(x => x.CategoryId.ToString() == search || search == null).ToList());
-            //}
-            //else
-            //{
-            //    return PartialView("SearchPartial",db.Contents.Where(x => x.Name.StartsWith(search) || search == null).ToList());
-            //}
-
-
-
-            // return View("Display", db.Contents.Where(x => x.Name.Contains(searching) || searching == null).ToList());
 
             return PartialView("SearchPartial");
         }
@@ -323,13 +308,7 @@ namespace UploadDataToDB.Controllers
                 ViewBag.cartCount = count;
 
 
-                //var item1 = new List<SelectListItem>();
-                //foreach(var item in CategoryList)
-                //{
-                //    var SelectedItem = false;
-                //    items.Add(new SelectListItem { Selected = SelectedItem, Text = item.CategoryName, Value = item.CategoryId.ToString() });
-                //}
-                //   ViewData["CategoryList"] = CategoryList;
+               
                 List<CategoryViewModel> catList = new List<CategoryViewModel>();
                 catList.Add(new CategoryViewModel { CategoryId = 0, CategoryName = "ALL" });
 
@@ -342,15 +321,17 @@ namespace UploadDataToDB.Controllers
 
                 ViewBag.Category = catList;
 
-
-
-                // return View(db.Employees.OrderBy(c => c.Id).ToList().ToPagedList(pageNumber, pagesize));
                 if (searching != null)
                 {
 
                     //   return View("Display", contentModel.Where(x => x.Name.Contains(searching) || searching == null).ToList().ToPagedList(pageNumber, pagesize));
                     // return View("Display", contentModel.Where(x => string.IsNullOrEmpty(searching) || x.Name.Contains(searching)).ToList().ToPagedList(pageNumber, pagesize));
-                    return View("Display", contentModel.Where(x => string.IsNullOrEmpty(searching) || x.Name.IndexOf(searching, System.StringComparison.OrdinalIgnoreCase) >= 0).ToList().ToPagedList(pageNumber, pagesize));
+
+                    var result = contentModel
+                        .Where(x => string.IsNullOrEmpty(searching) || x.Name.IndexOf(searching, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        .ToList()
+                        .ToPagedList(pageNumber, pagesize);
+                    return View("Display", result);
 
                 }
                 else
@@ -362,10 +343,85 @@ namespace UploadDataToDB.Controllers
         }
             catch (Exception ex)
             {
-                return RedirectToAction("Login");
-               // throw;
+               
+                //throw;
             }
+            return View("Display");
+        }
 
+        [Route("DisplayPartial")]
+        [HttpGet]
+        public ActionResult DisplayPartial(SearchViewModel searchViewModel)
+        {
+            try
+            {
+                List<ContentViewModel> contentModel = db.Contents.Select(item => new ContentViewModel()
+                {
+                    ID = item.ID,
+                    Name = item.Name,
+                    price = item.price,
+                    Review = item.Review,
+                    Image = item.Image,
+
+                    BrandId = item.BrandId == null ? 0 : item.BrandId.Value,
+                    CategoryId = item.CategoryId == null ? 0 : item.CategoryId.Value,
+                    Description = item.Description,
+                    BrandDesc = item.Brand.BrandName,
+                    CategoryDesc = item.Category.CategoryName,
+                    
+
+                }).ToList();
+
+                ViewBag.PageSize = new List<SelectListItem>()
+            {
+                new SelectListItem() { Value="5", Text= "5" },
+                new SelectListItem() { Value="10", Text= "10" },
+                new SelectListItem() { Value="15", Text= "15" },
+                new SelectListItem() { Value="25", Text= "25" },
+                new SelectListItem() { Value="50", Text= "50" },
+            };
+
+                int pageNumber = (searchViewModel.Page ?? 1);
+                int pagesize = (searchViewModel.PageSize ?? 5);
+                // int PageCount=(searchViewModel.PageCount ??)
+
+                ViewBag.pageNumber = pageNumber;
+                ViewBag.psize = pagesize;
+                ViewBag.Count = contentModel.Count;
+                int UserId = System.Convert.ToInt32(Session["UserId"].ToString());
+                var count = (from a in db.UserCarts
+                             where a.UserId == (UserId)
+                             select a.Quantity).Sum();
+                ViewBag.cartCount = count;
+
+                List<ContentViewModel> result = new List<ContentViewModel>();
+
+                //result = contentModel.Where(x => (string.IsNullOrEmpty(searchViewModel.SearchText) || (x.Name.ToLower().Contains(searchViewModel.SearchText.ToLower())))
+                //                                && (searchViewModel.BrandId == 0 || x.BrandId == searchViewModel.BrandId)
+                //                                && (searchViewModel.CategoryId == 0 || x.CategoryId == searchViewModel.CategoryId)
+                //                                ).ToList().ToPagedList(pageNumber, pagesize).ToList();
+                //result= contentModel.Where(x => (string.IsNullOrEmpty(searchViewModel.SearchText) || (x.Name.ToLower().Contains(searchViewModel.SearchText.ToLower())))
+                //                              && (searchViewModel.BrandId == 0 || x.BrandId == searchViewModel.BrandId)
+                //                              && (searchViewModel.CategoryId == 0 || x.CategoryId == searchViewModel.CategoryId)
+                //                              ).ToList().ToPagedList(pageNumber, pagesize).ToList();
+
+                //return View("DisplayPartial", result);
+
+                //return View("DisplayPartial", contentModel.Where(x => (string.IsNullOrEmpty(searchViewModel.SearchText) || (x.Name.ToLower().Contains(searchViewModel.SearchText.ToLower())))
+                //                              && (searchViewModel.BrandId == 0 || x.BrandId == searchViewModel.BrandId)
+                //                              && (searchViewModel.CategoryId == 0 || x.CategoryId == searchViewModel.CategoryId)
+                //                              ).ToList().ToPagedList(pageNumber, pagesize));
+                return View("DisplayPartial", contentModel.Where(x => (string.IsNullOrEmpty(searchViewModel.SearchText) || (x.Name.ToLower().Contains(searchViewModel.SearchText.ToLower())))
+                                          && (searchViewModel.BrandId == 0 || x.BrandId == searchViewModel.BrandId)
+                                          && (searchViewModel.CategoryId == 0 || x.CategoryId == searchViewModel.CategoryId)
+                                          ).ToList().ToPagedList(pageNumber, pagesize));
+            }
+            catch (Exception ex)
+            {
+                //return RedirectToAction("Login");
+                //throw;
+            }
+            return View("DisplayPartial");
         }
 
 
@@ -413,80 +469,6 @@ namespace UploadDataToDB.Controllers
             return Json(ViewBag.Category, JsonRequestBehavior.AllowGet);
 
         }
-
-
-        [Route("DisplayPartial")]
-        [HttpGet]
-        public ActionResult DisplayPartial(SearchViewModel searchViewModel)
-        {
-            try
-            {
-                List<ContentViewModel> contentModel = db.Contents.Select(item => new ContentViewModel()
-                {
-                    ID = item.ID,
-                    Name = item.Name,
-                    price = item.price,
-                    Review = item.Review,
-                    Image = item.Image,
-
-                    BrandId = item.BrandId == null ? 0 : item.BrandId.Value,
-                    CategoryId = item.CategoryId == null ? 0 : item.CategoryId.Value,
-                    Description = item.Description,
-                    BrandDesc = item.Brand.BrandName,
-                    CategoryDesc = item.Category.CategoryName,
-
-
-                }).ToList();
-
-                ViewBag.PageSize = new List<SelectListItem>()
-            {
-                new SelectListItem() { Value="5", Text= "5" },
-                new SelectListItem() { Value="10", Text= "10" },
-                new SelectListItem() { Value="15", Text= "15" },
-                new SelectListItem() { Value="25", Text= "25" },
-                new SelectListItem() { Value="50", Text= "50" },
-            };
-
-                int pageNumber = (searchViewModel.Page ?? 1);
-                int pagesize = (searchViewModel.PageSize ?? 5);
-                // int PageCount=(searchViewModel.PageCount ??)
-
-                ViewBag.pageNumber = pageNumber;
-                ViewBag.psize = pagesize;
-                ViewBag.Count = contentModel.Count;
-                int UserId = System.Convert.ToInt32(Session["UserId"].ToString());
-                var count = (from a in db.UserCarts
-                             where a.UserId == (UserId)
-                             select a.Quantity).Sum();
-                ViewBag.cartCount = count;
-
-                List<ContentViewModel> result = new List<ContentViewModel>();
-
-                //result = contentModel.Where(x => (string.IsNullOrEmpty(searchViewModel.SearchText) || (x.Name.ToLower().Contains(searchViewModel.SearchText.ToLower())))
-                //                                && (searchViewModel.BrandId == 0 || x.BrandId == searchViewModel.BrandId)
-                //                                && (searchViewModel.CategoryId == 0 || x.CategoryId == searchViewModel.CategoryId)
-                //                                ).ToList().ToPagedList(pageNumber, pagesize).ToList();
-                //result= contentModel.Where(x => (string.IsNullOrEmpty(searchViewModel.SearchText) || (x.Name.ToLower().Contains(searchViewModel.SearchText.ToLower())))
-                //                              && (searchViewModel.BrandId == 0 || x.BrandId == searchViewModel.BrandId)
-                //                              && (searchViewModel.CategoryId == 0 || x.CategoryId == searchViewModel.CategoryId)
-                //                              ).ToList().ToPagedList(pageNumber, pagesize).ToList();
-
-                //return View("DisplayPartial", result);
-
-
-                return View("DisplayPartial", contentModel.Where(x => (string.IsNullOrEmpty(searchViewModel.SearchText) || (x.Name.ToLower().Contains(searchViewModel.SearchText.ToLower())))
-                                              && (searchViewModel.BrandId == 0 || x.BrandId == searchViewModel.BrandId)
-                                              && (searchViewModel.CategoryId == 0 || x.CategoryId == searchViewModel.CategoryId)
-                                              ).ToList().ToPagedList(pageNumber, pagesize));
-            }
-            catch (Exception ex)
-            {
-                //return RedirectToAction("Login");
-                throw;
-            }
-
-        }
-
 
 
         public ActionResult RetriveId(int id)
