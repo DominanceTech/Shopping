@@ -25,36 +25,33 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-@*<script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.0.5/what-input.js"></script>
-    <script src="~/Scripts/foundation.js"></script>
-    <script src="~/Scripts/App.js"></script>*@
 <script>
 
-    function GetSearchData(pageSize, PageNumber, searchText, BrandLayout, CategoryLayout) {
+    //function GetSearchData(pageSize, PageNumber, searchText, BrandLayout, CategoryLayout) {
 
-        $.ajax({
-            url: "/Home/DisplayPartial",
+    //    $.ajax({
+    //        url: "/Home/DisplayPartial",
 
-            datatype: "text",
-            type: "Get",
+    //        datatype: "text",
+    //        type: "Get",
 
-            data: { Page: PageNumber, PageSize: pageSize, SearchText: searchText, BrandLayout: BrandLayout, CategoryLayout: CategoryLayout },
-            contenttype: 'application/json; charset=utf-8',
-            async: true,
-            success: function (data) {
+    //        data: { Page: PageNumber, PageSize: pageSize, SearchText: searchText, BrandLayout: BrandLayout, CategoryLayout: CategoryLayout },
+    //        contenttype: 'application/json; charset=utf-8',
+    //        async: true,
+    //        success: function (data) {
 
-                $("#contentModel").html(data);
+    //            $("#contentModel").html(data);
 
-            },
-            error: function (xhr) {
-                alert(xhr.message);
-            }
-        });
-    }
+    //        },
+    //        error: function (xhr) {
+    //            alert(xhr.message);
+    //        }
+    //    });
+    //}
 
 
 
-    $(function () {
+    //$(function () {
         @*$('#searchbtn').click(function () {
 
             var pageSize = $("#pageSize").val();
@@ -69,7 +66,7 @@
 
         });*@
      //   jQuery(document).foundation();
-    });
+    //});
 
 
 

@@ -41,10 +41,8 @@ namespace UploadDataToDB.Repositories
         //    }
         public int AddUpdateUserData(UserDataViewModel userdataviewmodel)
         {
-
             if (userdataviewmodel.UserId == 0)
             {
-                //User UserData= new User()
                 var UserData = new User
                 {
                     FirstName = userdataviewmodel.FirstName,
@@ -62,8 +60,7 @@ namespace UploadDataToDB.Repositories
             {
                 User updateData = (from a in db.Users
                                    where a.UserId == userdataviewmodel.UserId
-                                       select a).FirstOrDefault();
-
+                                   select a).FirstOrDefault();
                 updateData.FirstName = userdataviewmodel.FirstName;
                 updateData.LastName = userdataviewmodel.LastName;
                 updateData.Gender = userdataviewmodel.Gender;
@@ -94,9 +91,9 @@ namespace UploadDataToDB.Repositories
                 var Content = new Content
                 {
                     Name = contentViewModel.Name,
-                    BrandId = contentViewModel.BrandId, 
-                    CategoryId=contentViewModel.CategoryId,
-                       price = contentViewModel.price,
+                    BrandId = contentViewModel.BrandId,
+                    CategoryId = contentViewModel.CategoryId,
+                    price = contentViewModel.price,
                     Review = contentViewModel.Review,
                     Description = contentViewModel.Description,
                     Image = imageData
@@ -105,36 +102,31 @@ namespace UploadDataToDB.Repositories
             }
             else
             {
-
                 Content updateContent = (from c in db.Contents where c.ID == contentViewModel.ID select c).FirstOrDefault();
-                updateContent.Name = contentViewModel.Name;
-                updateContent.price = contentViewModel.price;
-                updateContent.BrandId = contentViewModel.BrandId;
-                updateContent.CategoryId = contentViewModel.CategoryId;
-                updateContent.Description = contentViewModel.Description;
-                updateContent.price = contentViewModel.price;
-                updateContent.Review = contentViewModel.Review;
-                updateContent.Image = imageData == null ? updateContent.Image : imageData;
-
-            } int i = db.SaveChanges();
+                updateContent.Name = contentViewModel.Name; updateContent.price = contentViewModel.price;
+                updateContent.Description = contentViewModel.Description; updateContent.price = contentViewModel.price;
+                updateContent.Review = contentViewModel.Review; updateContent.Image = imageData == null ? updateContent.Image : imageData;
+            }
+            int i = db.SaveChanges();
             if (i == 1)
             {
                 return 1;
             }
-            else {
+            else
+            {
                 return 0;
             }
         }
 
-   
-    public byte[] ConvertToBytes(HttpPostedFileBase image)
-    {
-        if (image == null || image.ContentLength == 0)
-            return null;
-        byte[] imageBytes = null;
-        BinaryReader reader = new BinaryReader(image.InputStream);
-        imageBytes = reader.ReadBytes((int)image.ContentLength);
-        return imageBytes;
+
+        public byte[] ConvertToBytes(HttpPostedFileBase image)
+        {
+            if (image == null || image.ContentLength == 0)
+                return null;
+            byte[] imageBytes = null;
+            BinaryReader reader = new BinaryReader(image.InputStream);
+            imageBytes = reader.ReadBytes((int)image.ContentLength);
+            return imageBytes;
+        }
     }
-}
 }
