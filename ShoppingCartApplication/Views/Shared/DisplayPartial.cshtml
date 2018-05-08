@@ -35,16 +35,41 @@
     }
 
     .col-md-8 {
-        width: 73% !important;
+        width: 71% !important;
     }
+ 
 </style>
 
+@*<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+          
 
+            <div class="container" style="text-align:center!important">
+                <div class="model-header">
+                    <button type="button" id="closbtn" class="close text-center" data-dismiss="modal" aria-hidden="true">×</button>
+                 
+                </div>
 
+                <hr />
+                <label class="text-center">Please Select the User</label>
+                <br /><br />
+                <div>
+                    <label for="field" style="color:black; align-content:center;">User &nbsp;</label> &nbsp;&nbsp;<span style="color:black;">:</span>
+                    @Html.DropDownList("UserList", new SelectList((IEnumerable<UploadDataToDB.ViewModel.UserDataViewModel>)ViewBag.User, "UserId", "FirstName"), new { @style = "width:115px; Height:30px; text-align:right;" })
+                </div>
+                <input type="hidden" id="UserList" value="@ViewBag.User" />
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+
+</div>*@   
 @foreach (var item in Model)
 {
 
-    <div class=" body-content box content">
+    <div class="body-content box content">
         <div class="panel-group row">
             @*col-sm-3 col-md-6*@@*width="250" height="250"*@
             @*<div class="panel-body dl-horizontal col-sm-6 col-md-4">*@
@@ -106,7 +131,7 @@
                     </li>
                     <li>
                         <div>
-                            <a id="@item.ID" class="btn_AddToCart btn btn-info" style="height:30px;">
+                            <a id="@item.ID" class="btn_AddToCartbyAdmin btn btn-info" style="height:30px;">
                                 <span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart
                             </a>
                         </div>
@@ -149,10 +174,10 @@
 
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script type="text/javascript">
-      $('.btn_AddToCart').click(function (e) {
-       var productid = $(this).attr("id");
-            //  var productid = $('#ID').html();
-            var UserId = '@Session["UserId"].ToString()';
+    $('.btn_AddToCart').click(function (e) {
+        var productid = $(this).attr("id");
+
+        var UserId = '@Session["UserId"].ToString()';
 
             $.ajax({
                 url: "/Home/Add",
@@ -162,8 +187,6 @@
                 data: { ProductId: productid, UserId: UserId },
 
                 success: function (data) {
-
-                   // $('#spnCart').html((@ViewBag.cartCount)+1)
                     $('#contentModel').html(data)
 
                 },
@@ -178,7 +201,7 @@
         $('.dropdown-toggle').dropdown();
         });
 
-    
+
             var PageNumber = $("#pageNumberValue").val();
             var PageCount = $("#PageCount").val();
             if (PageNumber == 1 && PageCount == 1) {
@@ -188,7 +211,7 @@
                 $('#previous').prop("disabled", true);
             }
             else {
-              
+
 
                 if (PageNumber == 1) {
                     $('#previous').prop("disabled", true);
@@ -208,12 +231,68 @@
             $(document).ready(function () {
                 $(document).ajaxStart(function () {
                     $('#wait').css("display", "block")
+                    //$('.body-content').css("filter", "blur(3px)");
+                    $('.body-content').fadeOut(500);
+                     $(".body-content").fadeIn(500);
+                    //$(".body-content").fadeOut(500, function () {
+                    //    $(".body-content").fadeIn(500);
+                    //});
+
                 });
                 $(document).ajaxComplete(function () {
                     $("#wait").css("display", "none");
+                    $('.body-content').css("filter", "none");
                 });
 
             });
 
-</script>
 
+
+  $(function () {
+                $('.btn_AddToCartbyAdmin').click(function (e) {
+                    var UserList = $('#UserList').val();
+                    alert(UserList);
+
+                    if (UserList == 0 && @Session["Role"] != null)
+                    {
+                        alert("Please select the User");
+                        @*@ViewBag.ErMessage;*@
+
+                    }
+                    else {
+
+                         var productid = $(this).attr("id");
+                       var UserId = $('#UserList').val();
+
+                    $.ajax({
+                          url: "/Home/Add",
+
+                          datatype: "text",
+                          type: "Get",
+                          data: { ProductId: productid, UserId: UserId },
+
+                         success: function (data) {
+                          $('#contentModel').html(data)
+
+                          },
+                          error: function (xhr) {
+                          alert(xhr.statusText);
+                                  }
+                         });
+                    }
+
+      });
+
+                $('#UserList').change(function () {
+                    var UserList = $('#UserList').val();
+                    UserList.
+                    alert(UserList);
+                });
+                //$("#closebtn").on('click',function(){
+                //    $('#myModal').modal('hide');
+
+                $("#closbtn").click(function () {
+                    $('#myModal').modal('hide');
+                });
+            });
+</script>

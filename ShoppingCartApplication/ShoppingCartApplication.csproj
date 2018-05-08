@@ -288,6 +288,7 @@
     <Content Include="Views\Home\UserProfile.cshtml" />
     <Content Include="Views\Home\EditYourProfile.cshtml" />
     <Content Include="Views\Home\OrderClick.cshtml" />
+    <Content Include="Views\Home\PopupPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

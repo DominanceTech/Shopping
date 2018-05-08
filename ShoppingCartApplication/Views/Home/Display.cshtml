@@ -11,14 +11,22 @@
     <a id="main">
         <span style="font-size:30px;cursor:pointer; position:fixed;" onclick="openNav()">&#9776; </span>
     </a><span style="padding-left:1160px;"></span>&nbsp;&nbsp;
+
+
     <b class=" navbar-right" style="margin-top:10px; float:left;">
         <label>Page Size: </label>
         @Html.DropDownList("pageSize")
 
     </b>
+  
 </div>
 <br />
+<div style="margin-left:50px;">
+    <label for="field" style="color:black;">User &nbsp;</label> &nbsp;&nbsp;<span style="color:black;">:</span>
+    <a class="dropdown-toggle"> @Html.DropDownList("UserList", new SelectList((IEnumerable<UploadDataToDB.ViewModel.UserDataViewModel>)ViewBag.User, "UserId", "FirstName"), new { @style = "width:115px; Height:30px; text-align:right;" })</a>
+</div>
 <br />
+@*<br />*@
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
@@ -90,14 +98,14 @@
 
 
                 var pageSize = $("#pageSize").val();
-               
+
                 var PageNumber = @ViewBag.pageNumber;
 
                 var searchText = $('#searchingvalue').val();
                 var BrandId = $('#BrandList').val();
 
                 var CategoryId = $('#CategoryList').val();
-              
+
                 var searching = 0;
 
                 GetSearchData(pageSize, PageNumber, searchText, BrandId, CategoryId);
@@ -151,7 +159,7 @@
             });
         //});
 
-     
+
         //$(function () {
             $("#pageSize").change(function () {
                 var searching = $('#searching').val();
@@ -242,7 +250,7 @@
 
             $('#btnFirst').prop("disabled", false);
             $('#previous').prop("disabled", false);
-         
+
                 if (searching == "") {
                     GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
                 }
@@ -254,12 +262,12 @@
                         GetSearchData(pageSize, page, searchText, BrandId, CategoryId);
                     }
                 }
-           
+
         });
-       
-            
-           
-    
+
+
+
+
 
         $("#previous").click(function () {
             var searching = $('#searching').val();
@@ -295,7 +303,7 @@
             }
             else {
 
-        
+
                 if (PageNumber > 1)
                 {
                     if (searching == "")
@@ -324,7 +332,7 @@
 
                 }
 
-            }  
+            }
 
         });
 
@@ -347,7 +355,7 @@
 
             $('#btnFirst').prop("disabled", false);
             $('#previous').prop("disabled", false);
-         
+
                 var pageSize = $("#pageSize").val();
 
                 var PageNumber = $("#pageNumberValue").val();
@@ -363,7 +371,7 @@
                 {
                     $(this).prop("disabled", true);
                     $('#btnLast').prop("disabled", true);
-                   
+
                 }
                 else
                 {
@@ -392,15 +400,15 @@
                     }
                 }
 
-               
-               
+
+
 
         });
 
     });
 
 
-   
+     
 
 </script>
 

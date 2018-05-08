@@ -7,7 +7,13 @@
     @Html.Partial("MyorderPartial");
 </div>
 
+<style>
+    /*body > *:not(#wait) {
+      
+        filter: blur(3px);
+    }*/
 
+</style>
 <script>
     $('.dropdown-toggle').click(function (e) {
         $('.dropdown-toggle').dropdown();
@@ -115,11 +121,15 @@
        $(document).ready(function () {
            $(document).ajaxStart(function () {
                $('#wait').css("display", "block")
+               $('#dvContents').css("filter", "blur(3px)");
+               $('.body-content').fadeOut(500);
+               $(".body-content").fadeIn(500);
            });
            $(document).ajaxComplete(function () {
                $("#wait").css("display", "none");
+               $('#dvContents').css("filter", "none");
            });
-
+         
        });
 
 </script>
