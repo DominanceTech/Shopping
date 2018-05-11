@@ -39,7 +39,28 @@ namespace UploadDataToDB.Repositories
         //    {
         //        return 0;
         //    }
-        public int AddUpdateUserData(UserDataViewModel userdataviewmodel)
+
+        //public int AddUpdateOrderData(OrderViewModel orderStatus)
+        //{
+        //    UserOrder updateData = (from a in db.UserOrders
+        //                       where a.UserId == orderStatus.UserId && a.OrderId==orderStatus.OrderId
+        //                       select a).FirstOrDefault();
+        //    updateData.OrderStatus = orderStatus.OrderStatus;
+         
+
+       
+        //int i = db.SaveChanges();
+        //    if (i == 1)
+        //    {
+        //        return 1;
+        //    }
+        //    else
+        //    {
+        //        return 0;
+        //    }
+
+        //}
+        public int AddUpdateUserData(UserDataViewModel userdataviewmodel) 
         {
             if (userdataviewmodel.UserId == 0)
             {

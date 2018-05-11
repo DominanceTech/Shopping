@@ -11,24 +11,24 @@
        @foreach (var item in Model)
        {
 
-        <div class="jumbotron" style="height:150px;margin-top:15px; margin-bottom:15px; line-height:1.4;font-size:15px;">
-            <div style="margin-top:-19px;">
-             
+        <div class="jumbotron" style="height:160px;margin-top:15px; margin-bottom:15px; line-height:1.4;font-size:15px;">
+            <div style="margin-top:-29px;">
+             <div>User Name <b style="margin-right:5px;">&nbsp; :</b> <b>@item.UserName (@item.Email)</b></div>
                 @*@Html.ActionLink("Profile", "OrderClick", "Home", new { OrderId = item.OrderId.ToUpper() }, null)*@
-                <a href="@Url.Action("OrderClick","Home",new { OrderId = item.OrderId.ToUpper()})">
+                <a href="@Url.Action("OrderClick","Home",new { OrderId = item.OrderId.ToUpper(), UserId=item.UserId})">
                     @*<a class="orderclick" id="@item.OrderId">*@
-                    OrderId <b style="margin-left:30px; margin-right:5px;"> :</b> <b>@Html.DisplayFor(modelItem => item.OrderId)</b>
+                    Order Id <b style="margin-left:26.5px; margin-right:5px;">&nbsp;:</b> <b>@Html.DisplayFor(modelItem => item.OrderId)</b>
                 </a>
 
                 <div>
-                    OrderStatus <b style="margin-right:5px;"> :</b>  <b>
+                    Order Status <b>:</b>  <b>
                         @Html.DisplayFor(modelItem => item.OrderStatus)
 
                 </b>
               </div>
 
                 <div>
-                  Date <b style="margin-left:48.5px; margin-right:3px;"> :</b> <b>@item.DateTime.Value.ToString("ddd")</b> &nbsp;
+                  Date <b style="margin-left:48.5px; margin-right:3px;"> &nbsp;:</b> <b>@item.DateTime.Value.ToString("ddd")</b> &nbsp;
                     <b>
                         @item.DateTime.Value.ToString("dd MMM yyyy")
                 </b>
@@ -36,10 +36,10 @@
 
         
             <div>
-                Total Price<b style="margin-left:9.5px;margin-right:5px;"> :</b><b>@Html.DisplayFor(modelItem => item.Price)</b>
+                Total Price<b style="margin-left:9.5px;margin-right:5px;"> &nbsp;:</b><b>@Html.DisplayFor(modelItem => item.Price)</b>
             </div>
             <div>
-              No. of Items<b style="margin-left:-1px; margin-right:5px;"> :</b><b>@Html.DisplayFor(modelItem => item.Quantity)</b>&nbsp; Items
+              No. of Items<b style="margin-left:-1px; margin-right:5px;"> &nbsp;:</b><b>@Html.DisplayFor(modelItem => item.Quantity)</b>&nbsp; Items
             </div>
         </div>
 

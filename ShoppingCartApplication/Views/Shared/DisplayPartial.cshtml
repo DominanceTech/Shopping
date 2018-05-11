@@ -160,7 +160,13 @@
 }
 <div id="wait" style="display:none;width:69px;height:69px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><b class="loader" width="64" height="64"><br>Loading..</b></div>
 
+@if(Model.PageCount==0)
+{
+    <div class="text-center">
+        <label style="color:red;">No Any Product</label>
 
+    </div>
+}
 <div colspan="3" class="pager">
     @*<input type="button" class="btn " id="btnFirst" value="First" />
     <input type="button" class="btn " id="previous" value="Previous" />*@
@@ -251,9 +257,9 @@
   $(function () {
                 $('.btn_AddToCartbyAdmin').click(function (e) {
                     var UserList = $('#UserList').val();
-                    alert(UserList);
+                 
 
-                    if (UserList == 0 && @Session["Role"] != null)
+                    if (UserList == 0 || UserList=="1")
                     {
                         alert("Please select the User");
                         @*@ViewBag.ErMessage;*@
@@ -285,8 +291,7 @@
 
                 $('#UserList').change(function () {
                     var UserList = $('#UserList').val();
-                    UserList.
-                    alert(UserList);
+                
                 });
                 //$("#closebtn").on('click',function(){
                 //    $('#myModal').modal('hide');

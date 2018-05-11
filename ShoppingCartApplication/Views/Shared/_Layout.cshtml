@@ -117,18 +117,7 @@
                                 </ul>
                             </li>
                         }
-                        @*<li style="margin-top:10px;">
-
-                            @using (Html.BeginForm("Display", "Home", FormMethod.Get))
-                            {
-                                    @Html.TextBox("searching", null, new {@style= "height:34px;", @placeholder = "Product Name" })
-                             
-                                <button class="btn btn-info" value="Search" type="submit">
-                                    <span class="glyphicon glyphicon-search"></span>
-                                </button>
-                            } 
-                                  
-                         </li>*@
+                      
 
                     </ul>
 
@@ -177,16 +166,31 @@
 
                             @*@Html.ActionLink("Logout", "LogOut", "Home");*@
                             <li>@Html.ActionLink("Logout", "LogOut", "Home", new { @class = "nav" })</li>
-                           // <li style="margin-top:10px;"><button>@Html.ActionLink("Cart ", "AddToCart")<span class="glyphicon glyphicon-shopping-cart"></span></button></li>
-                           <ul class="nav navbar-nav">
-                               @*<li class="divCart" style="color:white;">@Session["count"]
-                                  Cart : <span id="spnCart">@ViewBag.cartCount</span>
-                               </li>*@
-                              <li class="active"><a href="@Url.Action("MyorderPartial", "Home")" class="btn btn-info btn-sm">  
-                               <span class="glyphicon glyphicon-shopping-cart" style="color:white"></span>Cart <span id="spnCart" style="color:black" class="badge">@ViewBag.cartCount@*@Session["count"]*@</span>  
-                            </a></li></ul>
+                            // <li style="margin-top:10px;"><button>@Html.ActionLink("Cart ", "AddToCart")<span class="glyphicon glyphicon-shopping-cart"></span></button></li>
+                       
                         }
-                    
+                         @if (Session["Role"] != null)
+                         {
+                             <ul class="nav navbar-nav">
+
+                                 <li class="active">
+                                     <a href="@Url.Action("MyorderPartialAdmin", "Home")" class="btn btn-info btn-sm">
+                                         <span class="glyphicon glyphicon-shopping-cart" style="color:white"></span>Cart <span id="spnCart" style="color:black" class="badge">@ViewBag.cartCount@*@Session["count"]*@</span>
+                                     </a>
+                                 </li>
+                             </ul>
+                         }
+                         else
+                         {
+                             <ul class="nav navbar-nav">
+
+                                 <li class="active">
+                                     <a href="@Url.Action("MyorderPartial", "Home")" class="btn btn-info btn-sm">
+                                         <span class="glyphicon glyphicon-shopping-cart" style="color:white"></span>Cart <span id="spnCart" style="color:black" class="badge">@ViewBag.cartCount@*@Session["count"]*@</span>
+                                     </a>
+                                 </li>
+                             </ul>
+                         }
 
 
                     </div>

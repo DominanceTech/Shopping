@@ -21,10 +21,13 @@
   
 </div>
 <br />
-<div style="margin-left:50px;">
+@if(Session["Role"]!=null)
+{
+<div style="margin-left:50px;margin-bottom:-8px;">
     <label for="field" style="color:black;">User &nbsp;</label> &nbsp;&nbsp;<span style="color:black;">:</span>
-    <a class="dropdown-toggle"> @Html.DropDownList("UserList", new SelectList((IEnumerable<UploadDataToDB.ViewModel.UserDataViewModel>)ViewBag.User, "UserId", "FirstName"), new { @style = "width:115px; Height:30px; text-align:right;" })</a>
+    <a class="dropdown-toggle"> @Html.DropDownList("UserList", new SelectList((IEnumerable<UploadDataToDB.ViewModel.UserDataViewModel>)ViewBag.User, "UserId", "FirstName"), new { @style = "width:150px; Height:30px; text-align:right;" })</a>
 </div>
+}
 <br />
 @*<br />*@
 <div id="mySidenav" class="sidenav">

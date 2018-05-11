@@ -53,6 +53,9 @@ namespace UploadDataToDB.ViewModel
 
         public string BrandDesc { get; set; }
         public int Quantity { get; set; }
+        public string Email { get; set; }
+        public DateTime? DateTime { get; set; }
+        public int UserId { get; set; }
     }
     
     public class ResultModel

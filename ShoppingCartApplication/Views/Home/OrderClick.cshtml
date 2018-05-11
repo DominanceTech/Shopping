@@ -29,120 +29,168 @@
 <br />
 @foreach (var item in Model)
 {
-    <div class="text-center">
-        <b>OrderID &nbsp; : &nbsp;</b>  @Html.DisplayFor(modelItem => item.OrderId) 
-        &nbsp;&nbsp;
-        <b>Order Date &nbsp; : &nbsp;</b>  @*@Html.DisplayFor(modelItem => item.DateTime)*@   @item.DateTime.Value.ToString("dd MMM yyyy")
-        &nbsp;&nbsp;
-        <b>Order Status &nbsp; : &nbsp;</b> @Html.DisplayFor(modelItem => item.OrderStatus)
-       
+    <div style="height:30px;">
+        <div class="text-center" style="position:fixed; line-height:1.4;font-size:15px; background-color:whitesmoke;">
+           
+                <b>User Name &nbsp; : &nbsp;</b>@Html.DisplayFor(modelItem => item.UserName)
+                &nbsp;&nbsp;
+                <b>Order ID &nbsp; : &nbsp;</b>  @Html.DisplayFor(modelItem => item.OrderId)
+                &nbsp;&nbsp;
+                <b>Order Date &nbsp; : &nbsp;</b>  @*@Html.DisplayFor(modelItem => item.DateTime)*@   @item.DateTime.Value.ToString("dd MMM yyyy")
+                &nbsp;&nbsp;
+                <b>Order Status &nbsp; : &nbsp;</b> @Html.DisplayFor(modelItem => item.OrderStatus)
+                &nbsp;&nbsp;
+
+                @Html.DropDownList("OrderStatusval", new SelectList((IEnumerable<UploadDataToDB.ViewModel.OrderStatusViewModel>)ViewBag.OrderStatus, "OrderStatusId", "OrderStatus"), new { style = "width:130px;" })
+
+                @*<a href="@Url.Action("OrderStatus","Home",new {OrderId=item.OrderId.ToUpper(), UserId=item.UserId, style="color:white"})">*@ <button class="btn btn_Orderstatus btn-info btn-sm">Submit</button>@*</a>*@
+                <input type="hidden" id="OrderId" value="@item.OrderId" />
+                <input type="hidden" id="UserId" value="@item.UserId" />
+
+        </div>
     </div>
     break;
 }
-   
-<br />
-<table class="table container">
-  
-    <tr>
-        <th>
-            <button class="btn btn-info btn-sm">@Html.ActionLink("Back", "CheckOrders", "Home", new { style = "color:white" })</button>
 
-        </th>
- <th>
-     Name
- </th>
-        <th>
-            Brand Name
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Quantity)
-        </th>
-        <th>
-           Unit Price
-        </th>
-    <th>
-       Total Price
-    </th>
-        <th></th>
-    </tr>
+        <table class="table container">
 
-@foreach (var item in Model) {
-    <tr>
-        <td> <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="150" /></td>
-     <td>
-         @Html.DisplayFor(modelItem=>item.Name)
-     </td>
-       <td>
-           @Html.DisplayFor(modelItem=>item.BrandDesc)
-       </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Quantity)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TotalPrice)
-        </td>
-        
-    </tr>
-}
-</table>
-<b class="totalPrice col-sm-4 " style="float:right;">Total Amount:
-    @string.Format("{0:#,0.00}", @ViewBag.Total)
-   </b>
-@*@String.Format("{0:n", @ViewBag.Total)*@
-@*<hr />
-<div class="row">
-  <div class="col-md-4"><button class="btn btn-info btn-sm">@Html.ActionLink("Back", "CheckOrders", "Home")</button></div>  
-    <br />
-    <b class="col-md-4">
-        Name:
-    </b>
-    <b class="col-md-4">
-        Brand Name:
-    </b>
-    <b class="col-md-4">
-        @Html.DisplayNameFor(model => model.Quantity):
-    </b>
-    <b class="col-md-4">
-        @Html.DisplayNameFor(model => model.Price) :
-    </b>
-    <b class="col-md-4">
-        DateTime:
-    </b>
-</div>
-@foreach (var item in Model)
-{
-<div class="container">
-    <div class="panel-group row">
-        <div class="a-fixed-left-grid-col a-col-left" style="float:left;">
-            <div class="a-row">
-                <div aria-hidden="true" class="a-column a-span12 a-text-center">
-                    <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="150" />
+            <tr style="position:relative; line-height:1.4;font-size:15px; background-color:whitesmoke;">
+                <th>
+                    <button class="btn btn-info btn-sm">@Html.ActionLink("Back", "CheckOrders", "Home", new { style = "color:white;" })</button>
+
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Brand Name
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+                    Unit Price
+                </th>
+                <th>
+                    Total Price
+                </th>
+                <th></th>
+            </tr>
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td> <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="150" /></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BrandDesc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalPrice)
+                    </td>
+
+                </tr>
+            }
+        </table>
+        <b class="totalPrice col-sm-4 " style="float:right;">
+            Total Amount:
+            @string.Format("{0:#,0.00}", @ViewBag.Total)
+        </b>
+
+
+
+        <script src="~/Scripts/jquery-1.10.2.js"></script>
+        <script>
+            $('#OrderStatusval').change(function () {
+                var OrderStatusval = $('#OrderStatusval').val();
+            });
+
+            $('.btn_Orderstatus').click(function () {
+                var OrderStatusval = $('#OrderStatusval').val();
+                alert(OrderStatusval);
+                var orderid = $('#OrderId').val();
+                var userid = $('#UserId').val();
+                $.ajax({
+                    url: "/Home/OrderStatus",
+
+                    datatype: "text",
+                    type: "Get",
+
+                    data: { OrderId: orderid, UserId: userid, OrderStatusval: OrderStatusval },
+                    contenttype: 'application/json; charset=utf-8',
+                    async: true,
+                    success: function (data) {
+                        alert("Success");
+                    },
+                    error: function (xhr) {
+                        alert(xhr.message);
+                    }
+                });
+
+            });
+
+        </script>
+        @*@String.Format("{0:n", @ViewBag.Total)*@
+        @*<hr />
+            <div class="row">
+              <div class="col-md-4"><button class="btn btn-info btn-sm">@Html.ActionLink("Back", "CheckOrders", "Home")</button></div>
+                <br />
+                <b class="col-md-4">
+                    Name:
+                </b>
+                <b class="col-md-4">
+                    Brand Name:
+                </b>
+                <b class="col-md-4">
+                    @Html.DisplayNameFor(model => model.Quantity):
+                </b>
+                <b class="col-md-4">
+                    @Html.DisplayNameFor(model => model.Price) :
+                </b>
+                <b class="col-md-4">
+                    DateTime:
+                </b>
+            </div>
+            @foreach (var item in Model)
+            {
+            <div class="container">
+                <div class="panel-group row">
+                    <div class="a-fixed-left-grid-col a-col-left" style="float:left;">
+                        <div class="a-row">
+                            <div aria-hidden="true" class="a-column a-span12 a-text-center">
+                                <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="150" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" text-left">
+                        <div class="panel-body">
+                            <div class="col-md-1">
+                                  @Html.DisplayFor(modelItem => item.Name)
+                            </div>
+                            <div class="col-md-1">
+                                @Html.DisplayFor(modelItem => item.BrandDesc)
+                            </div>
+                            <div class="col-md-1">
+
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </div>
+                            <div class="col-md-1">
+                                  @Html.DisplayFor(modelItem => item.Price)
+                            </div>
+                            <div class="col-md-1">
+                                 @Html.DisplayFor(modelItem => item.DateTime)
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class=" text-left">
-            <div class="panel-body">
-                <div class="col-md-1">
-                      @Html.DisplayFor(modelItem => item.Name)
-                </div>
-                <div class="col-md-1">
-                    @Html.DisplayFor(modelItem => item.BrandDesc)
-                </div>
-                <div class="col-md-1">
-                  
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </div>
-                <div class="col-md-1">
-                      @Html.DisplayFor(modelItem => item.Price)
-                </div>
-                <div class="col-md-1">
-                     @Html.DisplayFor(modelItem => item.DateTime)
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-}*@
+            }*@

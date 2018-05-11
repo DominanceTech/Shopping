@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Rahulk\Upload\ShoppingCartApplication\ShoppingCartApplication\Models\ShoppingCartModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Dominance\GIT\Shopping\Shopping\ShoppingCartApplication\Models\ShoppingCartModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

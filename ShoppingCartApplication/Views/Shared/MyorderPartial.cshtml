@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<UploadDataToDB.ViewModel.ContentViewModel>
 
 @*@model IEnumerable<UploadDataToDB.ViewModel.ContentViewModel>*@
-<h2><center> Cart </center></h2>
+
 @{
     ViewBag.Title = "Myorder";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -14,63 +14,80 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"> </script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"> </script>
-
-@if (@ViewBag.Total != 0)
+@foreach (var item in Model)
 {
-    <div id="dvContents">
-        <table class="table table-hover" width="100%">
-            <thead>
-                <tr>
+    <br />
+    <div class="text-center">
+        <b>UserName &nbsp; : &nbsp;</b>  @Html.DisplayFor(modelItem => item.UserName)
+        &nbsp;&nbsp;
+        @*<b>Date &nbsp; : &nbsp;</b>  @item.DateTime.Value.ToString("dd MMM yyyy")
+        &nbsp;&nbsp;*@
+        <b>Email &nbsp; : &nbsp;</b> @Html.DisplayFor(modelItem => item.Email)
+        &nbsp;&nbsp;
+        <b>Date &nbsp; : &nbsp;</b>  @item.DateTime.Value.ToString("dd MMM yyyy")
+        </div>
+        break;
+    }
+<br />
+    @if (@ViewBag.Total != 0)
+    {
+           <div id="dvContents">
+            <table class="table table-hover" width="100%">
+                <thead>
+                    <tr>
 
-                     <th>
-
-                      </th>
-                    <th>       </th>
-                    <th>Product Name</th>
-                    <th>Quantity</th>
-                    <th>Unit Price</th>
-                    <th>Total Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr class="container">
-                        <td> <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="150" /></td>
-
-
-                        <td class="hidden">@item.ID</td>
-                        <td> @item.Name</td>
-
-
-                        <td>   <button id="@item.ID" class="btn_Remove"> – </button> &nbsp; <b id="Quantity">@Html.DisplayFor(modelitem => item.Quantity)</b> &nbsp; <button id="@item.ID" class="AddTo"> + </button></td>
-                        <td>@Html.DisplayFor(modelitem => item.price) </td>
-                        <td>
-                            @string.Format("{0:#,0.00}", item.Totalprice)
-                        </td>
-
-                        <td><a id="@item.ID" class="btn_RemoveALL btn btn-info">Delete</a></td>
+                         <th>
+                             <button class="btn btn-info btn-md">@Html.ActionLink("Back", "Display", "Home", new { style = "color:white" })</button>
+                          </th>
+                        
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total Price</th>
+                        <th>Action</th>
                     </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="container">
+                            <td> <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="200" height="150" /></td>
 
 
-                }
-            </tbody>
+                            <td class="hidden">@item.ID</td>
+                            <td> @item.Name</td>
 
-        </table>
-        <div class="col-sm-4"><button class="btn btn-info btn-md">@Html.ActionLink("Back", "Display", "Home", new { style = "color:white" })</button>
-</div><div class="col-sm-4"><button class="btn_Confirmation btn btn-info btn-md">Confirm Order</button></div>
-        <b class="totalPrice col-sm-4 ">Total Amount:
-        @string.Format("{0:#,0.00}", @ViewBag.Total)
-        </b>
-     
-    </div>
 
-}
-else
-{
-   
-    @*<marquee direction="Right" style="color:red; font-size:36px;">Your Cart is Empty</marquee>*@
+                            <td>   <button id="@item.ID" class="btn_Remove"> – </button> &nbsp; <b id="Quantity">@Html.DisplayFor(modelitem => item.Quantity)</b> &nbsp; <button id="@item.ID" class="AddTo"> + </button></td>
+                            <td>@Html.DisplayFor(modelitem => item.price) </td>
+                            <td>
+                                @string.Format("{0:#,0.00}", item.Totalprice)
+                            </td>
+
+                            <td><a id="@item.ID" class="btn_RemoveALL btn btn-info">Delete</a></td>
+                        </tr>
+
+
+                        <input type="hidden" id="hiddenUserId" value=" @item.UserId" />
+                    }
+                </tbody>
+
+            </table>
+            <div class="col-sm-4">
+    </div><div class="col-sm-4"><button class="btn_Confirmation btn btn-info btn-md">Confirm Order</button>
+
+            </div>
+            <b class="totalPrice col-sm-4 ">Total Amount:
+            @string.Format("{0:#,0.00}", @ViewBag.Total)
+            </b>
+
+        </div>
+
+    }
+    else
+    {
+
+        @*<marquee direction="Right" style="color:red; font-size:36px;">Your Cart is Empty</marquee>*@
 
     <h1 style="color:red;">Your Cart is Empty</h1>
    

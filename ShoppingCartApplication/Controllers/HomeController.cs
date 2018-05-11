@@ -316,13 +316,23 @@ namespace UploadDataToDB.Controllers
 
 
                 int UserId = System.Convert.ToInt32(Session["UserId"].ToString());
-                var count = (from a in db.UserCarts
-                             where a.UserId == (UserId)
-                             select a.Quantity).Sum();
-                ViewBag.cartCount = count;
+                if (Session["Role"] != null)
+                {
+                    var count = (from a in db.UserCarts
+
+                                 select a.Quantity).Sum();
+                    ViewBag.cartCount = count;
+                }
+                else
+                {
+                    var count = (from a in db.UserCarts
+                                 where a.UserId == (UserId)
+                                 select a.Quantity).Sum();
+                    ViewBag.cartCount = count;
+                }
 
 
-               
+
                 List<CategoryViewModel> catList = new List<CategoryViewModel>();
                 catList.Add(new CategoryViewModel { CategoryId = 0, CategoryName = "ALL" });
 
@@ -413,10 +423,21 @@ namespace UploadDataToDB.Controllers
                 ViewBag.psize = pagesize;
                 ViewBag.Count = contentModel.Count;
                 int UserId = System.Convert.ToInt32(Session["UserId"].ToString());
-                var count = (from a in db.UserCarts
-                             where a.UserId == (UserId)
-                             select a.Quantity).Sum();
-                ViewBag.cartCount = count;
+                if (Session["Role"] != null)
+                {
+                    var count = (from a in db.UserCarts
+
+                                 select a.Quantity).Sum();
+                    ViewBag.cartCount = count;
+                }
+                else
+                {
+                    var count = (from a in db.UserCarts
+                                 where a.UserId == (UserId)
+                                 select a.Quantity).Sum();
+                    ViewBag.cartCount = count;
+                }
+
 
                 List<ContentViewModel> result = new List<ContentViewModel>();
 
@@ -519,27 +540,7 @@ namespace UploadDataToDB.Controllers
 
         }
 
-        ////[ChildActionOnly]
-        ////public ActionResult SearchPartial()
-        ////{
-        ////    ProjectEntities1 db = new ProjectEntities1();
-
-        ////    var BrandList = this.db.Brands.ToList();
-        ////    var items = new List<SelectListItem>();
-        ////    foreach (var item in BrandList)
-        ////    {
-        ////        var selectedItem = false;
-        ////        items.Add(new SelectListItem { Selected = selectedItem, Text = item.BrandName, Value = item.BrandId.ToString() });
-        ////    }
-        ////    ViewData["BrandList"] = BrandList;
-        ////    ViewData["CategoryList"] = items;
-        ////    //return this.PartialView("BrandLayout", items);
-        ////    return View();
-
-
-        ////}
-
-
+    
 
 
         [HttpGet]
@@ -800,11 +801,23 @@ namespace UploadDataToDB.Controllers
 
             }
 
+ //           string Role = Session["Role"].ToString() == null ? null : Session["Role"].ToString();
+            if (Session["Role"] != null)
+            {
+                var count = (from a in db.UserCarts
+                            
+                             select a.Quantity).Sum();
+                ViewBag.cartCount = count;
+            }
+            else
+            {
+                var count = (from a in db.UserCarts
+                             where a.UserId == (UserId)
+                             select a.Quantity).Sum();
+                ViewBag.cartCount = count;
+            }
+     
 
-            var count = (from a in db.UserCarts
-                         where a.UserId == (UserId)
-                         select a.Quantity).Sum();
-            ViewBag.cartCount = count;
 
 
             //  TempData["ProductAddedToCart"] = "Product added to cart successfully";
@@ -813,29 +826,94 @@ namespace UploadDataToDB.Controllers
 
         }
         [HttpGet]
-        public ActionResult MyorderPartial()
+        public ActionResult MyOrderPartialAdmin()
+        {
+            try
+            {
+                ShoppingCartAppEntities db = new ShoppingCartAppEntities();
+                var sum = 0;
+                var price = 0;
+
+                //int userId = System.Convert.ToInt32(Session["UserId"].ToString());
+
+
+                var item = from es in db.UserCarts
+                           join ts in db.Users on es.UserId equals ts.UserId
+                           join ed in db.Contents on es.ProductId equals ed.ID
+
+                           group new { ed.price, es.Quantity }
+                               by new { ts.FirstName, ts.LastName, ts.Email, ts.UserId } into g
+
+                           select new ContentViewModel
+                           {
+                               UserName = g.Key.FirstName.Trim()+" "+g.Key.LastName,
+                               Email = g.Key.Email,
+                               UserId = g.Key.UserId,
+                               price = g.Sum(e => e.price),
+                               Quantity = g.Sum(e => e.Quantity == null ? 0 : e.Quantity.Value),
+
+                           };
+
+
+                foreach (var totalsum in item)
+                    { 
+                        price = System.Convert.ToInt32(totalsum.price) * System.Convert.ToInt32(totalsum.Quantity);
+                        sum = sum + price;
+
+                    }
+
+                   
+                    ViewBag.Total = sum;
+                    ViewBag.Price = price;
+                    var count = (from a in db.UserCarts
+                                 select a.Quantity).Sum();
+                    ViewBag.cartCount = count;
+
+                    return PartialView("MyorderPartialAdmin", item);
+
+         
+
+
+                // return View((List<Content>)Session["cart"]);
+
+            }
+            catch (Exception ex)
+            {
+                // throw;
+                return RedirectToAction("Login");
+            }
+
+        }
+
+        [HttpGet]
+        public ActionResult MyorderPartial(int ? userId)
         {
             try
             {
                 ShoppingCartAppEntities db = new ShoppingCartAppEntities();
                 var sum = 0;
                 var Price = 0;
-               
-                int UserId = System.Convert.ToInt32(Session["UserId"].ToString());
-                //var Quantity =from a in db.UserCarts
-                //              where a.UserId== UserId
-                //              select a;
-               string Role= Session["Role"].ToString();
-                if (Role == "Admin")
+
+                // int UserId = System.Convert.ToInt32(Session["UserId"].ToString());
+                
+
+                if (Session["Role"] != null)
                 {
-                    //string UserName = Request["UserList"].ToString();
+                    userId = userId != null ? userId : Int32.Parse(TempData["UserId"].ToString());
+
                     var item = (from a in db.UserCarts
                                 join b in db.Contents
                                 on a.ProductId equals b.ID
-                               
+                                join c in db.Users
+                                on a.UserId equals c.UserId
+                                where a.UserId == userId
                                 select new ContentViewModel
                                 {
-                                    //UserName= UserName,
+                                    
+                                    UserId = a.UserId==null?0:a.UserId.Value,
+                                    UserName=c.FirstName,
+                                    Email=c.Email,
+                                    DateTime=a.DateTime,
                                     ID = b.ID,
                                     Name = b.Name,
                                     Image = b.Image,
@@ -844,21 +922,21 @@ namespace UploadDataToDB.Controllers
                                     Totalprice = (b.price * (a.Quantity == null ? 0 : a.Quantity.Value)),
                                 }).ToList();
 
+
                     foreach (var totalsum in item)
                     {
-                        //sum = sum + System.Convert.ToInt32(totalsum.price);
-                        //  sum = sum - ((totalsum.price * totalsum.Offer) / 100);
+                      
                         Price = System.Convert.ToInt32(totalsum.price) * System.Convert.ToInt32(totalsum.Quantity);
-                        sum = sum + /*System.Convert.ToInt32(totalsum.price)*/ Price;
+                        sum = sum + Price;
 
                     }
 
-                    //   Convert.ToDecimal(sum).ToString("#,##0.00");
+                   
                     ViewBag.Total = sum;
-                    //  String.Format("{0:n}", ViewBag.Total);
+                   
                     ViewBag.Price = Price;
                     var count = (from a in db.UserCarts
-                                 where a.UserId == (UserId)
+                                 
                                  select a.Quantity).Sum();
                     ViewBag.cartCount = count;
                     return View("Myorder", item);
@@ -866,12 +944,14 @@ namespace UploadDataToDB.Controllers
                 }
                 else
                 {
+                  int  userId1 = System.Convert.ToInt32(Session["UserId"].ToString());
                     var item = (from a in db.UserCarts
                                 join b in db.Contents
                                 on a.ProductId equals b.ID
-                                where a.UserId == UserId
+                                where a.UserId == userId1
                                 select new ContentViewModel
                                 {
+                                    UserId = a.UserId == null ? 0 : a.UserId.Value,
                                     ID = b.ID,
                                     Name = b.Name,
                                     Image = b.Image,
@@ -894,7 +974,7 @@ namespace UploadDataToDB.Controllers
                     //  String.Format("{0:n}", ViewBag.Total);
                     ViewBag.Price = Price;
                     var count = (from a in db.UserCarts
-                                 where a.UserId == (UserId)
+                                 where a.UserId == (userId1)
                                  select a.Quantity).Sum();
                     ViewBag.cartCount = count;
                     return View("Myorder", item);
@@ -979,7 +1059,7 @@ namespace UploadDataToDB.Controllers
                 }
 
             }
-
+            TempData["UserId"] = UserId;
 
             var count = (from a in db.UserCarts
                          where a.UserId == (UserId)
@@ -987,7 +1067,7 @@ namespace UploadDataToDB.Controllers
             ViewBag.cartCount = count;
 
 
-            return Redirect("MyorderPartial");
+            return RedirectToAction("MyorderPartial");
 
         }
 
@@ -1033,6 +1113,7 @@ namespace UploadDataToDB.Controllers
                 }
 
             }
+            TempData["UserId"] = UserId;
             //return RedirectToAction("MyorderPartial");
             return Redirect("MyorderPartial");
         }
@@ -1046,12 +1127,12 @@ namespace UploadDataToDB.Controllers
                 db.UserCarts.Remove(userCart);
                 db.SaveChanges();
             }
-
+            TempData["UserId"] = UserId;
             return Redirect("MyorderPartial");
         }
 
         [HttpGet]
-        public ActionResult OrderConfirmation(int UserId)
+        public ActionResult OrderConfirmation(int userId)
         {
             try
             {
@@ -1062,7 +1143,7 @@ namespace UploadDataToDB.Controllers
                 var OrderData = (from a in db.UserCarts
                                  join b in db.Contents
                                  on a.ProductId equals (b.ID)
-                                 where a.UserId == (UserId)
+                                 where a.UserId == (userId)
                                  select new OrderViewModel
                                  {
                                      UserId = a.UserId == null ? 0 : a.UserId.Value,
@@ -1130,7 +1211,7 @@ namespace UploadDataToDB.Controllers
                 db.SaveChanges();
 
                 var all = from c in db.UserCarts
-                          where c.UserId == UserId
+                          where c.UserId == userId
                           select c;
                 db.UserCarts.RemoveRange(all);
                 db.SaveChanges();
@@ -1139,7 +1220,7 @@ namespace UploadDataToDB.Controllers
                 var Email = Session["Email"].ToString();
                 User userdata = new User()
                 {
-                    UserId = UserId,
+                    UserId = userId,
                     Email = Email,
 
                 };
@@ -1154,20 +1235,29 @@ namespace UploadDataToDB.Controllers
             return RedirectToAction("CheckOrders");
         }
 
+
+
+
+
+
         [HttpGet]
-        public ActionResult OrderClick(string OrderId)
+        public ActionResult OrderClick(string OrderId, int? UserId)
         {
             ShoppingCartAppEntities db = new ShoppingCartAppEntities();
             var sum = 0;
             int Price = 0;
-            int UserId = System.Convert.ToInt32(Session["UserId"].ToString());
+            //int UserId = System.Convert.ToInt32(Session["UserId"].ToString());
 
             var item = (from a in db.UserOrders
                         join b in db.Contents
                         on a.ProductId equals b.ID
+                        join c in db.Users
+                        on a.UserId equals c.UserId
                         where a.UserId == UserId && a.OrderId==OrderId
                         select new OrderViewModel
                         {
+                            UserName=c.FirstName +" "+ c.LastName,
+                            UserId=a.UserId,
                             ProductId = b.ID,
                             Name = b.Name,
                             BrandDesc=b.Brand.BrandName,
@@ -1190,8 +1280,18 @@ namespace UploadDataToDB.Controllers
                          where a.UserId == (UserId)
                          select a.Quantity).Sum();
             ViewBag.cartCount = count;
+
+
            
-          
+            var orderstatuslist = db.OrderStatus.
+                               Select(b => new OrderStatusViewModel()
+                               {
+                                   OrderStatusId=b.OrderStatusId,
+                                   OrderStatus=b.OrderStatus,
+                               }).ToList();
+    
+            ViewBag.OrderStatus = orderstatuslist;
+
             return View("OrderClick",item);
         }
 
@@ -1200,42 +1300,91 @@ namespace UploadDataToDB.Controllers
         {
             ShoppingCartAppEntities db = new ShoppingCartAppEntities();
             int UserId = Convert.ToInt32(Session["UserId"].ToString());
-            var item = db.UserOrders.GroupBy(r =>
-             new
-             {
-                 r.OrderId,
-                 r.Date,
-                 r.UserId,
-                 r.OrderStatus,
+     
 
-             }).Select(r => new OrderViewModel()
-             {
-                 DateTime = r.Key.Date,
-                 OrderId = r.Key.OrderId,
-                 UserId= r.Key.UserId,
-                 OrderStatus=r.Key.OrderStatus,
-                 Quantity=r.Sum(a=>a.Quantity),
-                 Price = r.Sum(a => a.Price)
-             }).ToList()
-              .Where(g => g.UserId == UserId);
+            if (Session["Role"] != null)
+            {
+                //var item = db.UserOrders.GroupBy(r =>
+                //new
+                //{
+                //    r.OrderId,
+                //    r.Date,
+                //    r.UserId,
+                //    r.OrderStatus,
 
-
-            //foreach (var itemdata in item )
-            //{
-            // var data = from a in db.UserOrders
-            //               where a.UserId == UserId && a.OrderId == itemdata.OrderId
-            //               select a.OrderStatus;
+                //}).Select(r => new OrderViewModel()
+                //{
+                //    DateTime = r.Key.Date,
+                //    OrderId = r.Key.OrderId,
+                //    UserId = r.Key.UserId,
+                //    OrderStatus = r.Key.OrderStatus,
+                //    Quantity = r.Sum(a => a.Quantity),
+                //    Price = r.Sum(a => a.Price)
+                //}).ToList();
+                //ViewBag.item = item;
 
 
-            //}
-            //ViewBag.data = data;
-            var count = (from a in db.UserCarts
-                         where a.UserId == (UserId)
-                         select a.Quantity).Sum();
-            ViewBag.cartCount = count;
+                var item = from es in db.UserOrders
+                join ts in db.Users on es.UserId equals ts.UserId
+                
+                    group new { es.Price, es.Quantity }
+                    by new { es.OrderId,es.Date,es.OrderStatus, ts.FirstName, ts.Email, ts.LastName, es.UserId } into g
+                    orderby g.Key.Date descending
+
+                 select new OrderViewModel
+                {
+                    UserName = g.Key.FirstName.Trim() +" "+g.Key.LastName,
+                    Email = g.Key.Email,
+                    UserId = g.Key.UserId,
+                    DateTime=g.Key.Date,
+                    OrderId=g.Key.OrderId,
+                    OrderStatus=g.Key.OrderStatus,
+                    Price = g.Sum(e => e.Price),
+                    Quantity = g.Sum(e => e.Quantity == null ? 0 : e.Quantity.Value),
+
+                };
 
 
-            return View("CheckOrders",item);
+          
+                ViewBag.item = item;
+
+
+
+                var count = (from a in db.UserCarts
+                             select a.Quantity).Sum();
+                ViewBag.cartCount = count;
+            }
+            else
+            {
+                var item = from es in db.UserOrders
+                           join ts in db.Users on es.UserId equals ts.UserId
+
+                           group new { es.Price, es.Quantity }
+                           by new { es.OrderId, es.Date, es.OrderStatus, ts.FirstName, ts.Email, ts.LastName, es.UserId } into g
+                           orderby g.Key.Date descending
+                           where g.Key.UserId==UserId
+                           select new OrderViewModel
+                           {
+                               UserName = g.Key.FirstName.Trim() + " " + g.Key.LastName,
+                               Email = g.Key.Email,
+                               UserId = g.Key.UserId,
+                               DateTime = g.Key.Date,
+                               OrderId = g.Key.OrderId,
+                               OrderStatus = g.Key.OrderStatus,
+                               Price = g.Sum(e => e.Price),
+                               Quantity = g.Sum(e => e.Quantity == null ? 0 : e.Quantity.Value),
+
+                           };
+                    //.Where(g => g.UserId == UserId);
+
+                ViewBag.item = item;
+                var count = (from a in db.UserCarts
+                             where a.UserId == (UserId)
+                             select a.Quantity).Sum();
+                ViewBag.cartCount = count;
+            }
+
+            return View("CheckOrders", ViewBag.item);
 
 
         }
@@ -1285,7 +1434,46 @@ namespace UploadDataToDB.Controllers
                 return RedirectToAction("UserProfile");
             }
         }
+         [HttpGet]
+         public ActionResult OrderStatus(string OrderId, int ? UserId, string OrderStatusval)
+        {
 
+            var data = new OrderStatusViewModel();
+                //(from a in db.UserOrders
+                //              where a.OrderId == OrderId && a.UserId == UserId
+                //              select a).FirstOrDefault();
+            OrderViewModel model=   new OrderViewModel();
+            {
+                model.OrderStatus = OrderStatusval;
+            }
+
+            var item = (from a in db.UserOrders
+                              where a.OrderId == OrderId && a.UserId == UserId
+                              select a).First();
+
+              item.OrderStatus = model.OrderStatus;
+            db.SaveChanges();
+            return View("OrderClick");
+        }
+        //[HttpGet]
+        //public ActionResult CartAAAAA()
+        //{
+        //    if (Session["Role"] != null)
+        //    {
+        //        var count = (from a in db.UserCarts
+
+        //                     select a.Quantity).Sum();
+        //        ViewBag.cartCount = count;
+        //    }
+        //    else
+        //    {
+        //        var count = (from a in db.UserCarts
+        //                     where a.UserId == (UserId)
+        //                     select a.Quantity).Sum();
+        //        ViewBag.cartCount = count;
+        //    }
+        //    return ViewBag.cartCount;
+        //}
         //[HttpGet]
         //public ActionResult PopupPartial()
         //{

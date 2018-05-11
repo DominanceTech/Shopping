@@ -32,5 +32,6 @@ namespace UploadDataToDB.Models
         public virtual DbSet<UserCart> UserCarts { get; set; }
         public virtual DbSet<UserOrder> UserOrders { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<OrderStatu> OrderStatus { get; set; }
     }
 }

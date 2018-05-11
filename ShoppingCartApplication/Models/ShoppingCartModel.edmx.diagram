@@ -17,6 +17,7 @@
         <AssociationConnector Association="ShoppingCartAppModel.FK_dbo_Contents_dbo_Brands_BrandId" ManuallyRouted="false" />
         <AssociationConnector Association="ShoppingCartAppModel.FK_dbo_Contents_dbo_Categories_CategoryId" ManuallyRouted="false" />
         <AssociationConnector Association="ShoppingCartAppModel.FK_dbo_UserCarts_dbo_UserDatas_UserId" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ShoppingCartAppModel.OrderStatu" Width="1.5" PointX="8.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

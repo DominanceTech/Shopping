@@ -40,6 +40,15 @@
           <Property Name="CategoryId" Type="int" />
           <Property Name="BrandId" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ShoppingCartApp.dbo.OrderStatus' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="OrderStatus">
+          <Key>
+            <PropertyRef Name="OrderStatusId" />
+          </Key>
+          <Property Name="OrderStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderStatus" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="UserCarts">
           <Key>
             <PropertyRef Name="UserCartId" />
@@ -150,6 +159,12 @@
           <EntitySet Name="UserCarts" EntityType="Self.UserCarts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserOrders" EntityType="Self.UserOrders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderStatus" EntityType="Self.OrderStatus" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [OrderStatus].[OrderStatusId] AS [OrderStatusId], 
+    [OrderStatus].[OrderStatus] AS [OrderStatus]
+    FROM [dbo].[OrderStatus] AS [OrderStatus]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_dbo_BrandCategoryMappings_dbo_Brands_BrandId" Association="Self.FK_dbo_BrandCategoryMappings_dbo_Brands_BrandId">
             <End Role="Brands" EntitySet="Brands" />
             <End Role="BrandCategoryMappings" EntitySet="BrandCategoryMappings" />
@@ -350,7 +365,15 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="UserCarts" EntitySet="UserCarts" />
           </AssociationSet>
+          <EntitySet Name="OrderStatus" EntityType="ShoppingCartAppModel.OrderStatu" />
         </EntityContainer>
+        <EntityType Name="OrderStatu">
+          <Key>
+            <PropertyRef Name="OrderStatusId" />
+          </Key>
+          <Property Name="OrderStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -434,6 +457,14 @@
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
                 <ScalarProperty Name="Role" ColumnName="Role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderStatus">
+            <EntityTypeMapping TypeName="ShoppingCartAppModel.OrderStatu">
+              <MappingFragment StoreEntitySet="OrderStatus">
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="OrderStatusId" ColumnName="OrderStatusId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
